@@ -16,9 +16,7 @@ Thumbs.db
 test_gemini.py
 test_retrevier.py
 
-# Ignore backend and frontend build/data folders (optional - comment out if you want them tracked)
-backend/
-frontend/
+
 
 # Ignore Tree-sitter tools
 tree-sitter-c/
