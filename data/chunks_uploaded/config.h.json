@@ -1,0 +1,37 @@
+[
+  {
+    "type": "macro",
+    "start_line": 11,
+    "end_line": 12,
+    "code": "efine LPRINT_VERSION \"1.4.0\"\n#d",
+    "file": "data/codebase/xcode/config.h"
+  },
+  {
+    "type": "macro",
+    "start_line": 12,
+    "end_line": 13,
+    "code": "efine LPRINT_MAJOR_VERSION 1\n#d",
+    "file": "data/codebase/xcode/config.h"
+  },
+  {
+    "type": "macro",
+    "start_line": 13,
+    "end_line": 14,
+    "code": "efine LPRINT_MINOR_VERSION 4\n#d",
+    "file": "data/codebase/xcode/config.h"
+  },
+  {
+    "type": "macro",
+    "start_line": 14,
+    "end_line": 15,
+    "code": "efine LPRINT_PATCH_VERSION 0\n\n\n",
+    "file": "data/codebase/xcode/config.h"
+  },
+  {
+    "type": "macro",
+    "start_line": 19,
+    "end_line": 20,
+    "code": "efine LPRINT_EXPERIMENTAL 1\n",
+    "file": "data/codebase/xcode/config.h"
+  }
+]

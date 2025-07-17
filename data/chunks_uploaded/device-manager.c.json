@@ -1,0 +1,82 @@
+[
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "preprocessor_directive",
+    "start_line": 1,
+    "end_line": 1,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "preprocessor_directive",
+    "start_line": 2,
+    "end_line": 2,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "macro",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#define MAX_DEVICES 10\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "macro",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#define COMPANY_NAME \"EmbeddedSoft\"\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "enum",
+    "start_line": 7,
+    "end_line": 14,
+    "comments": "",
+    "code": "typedef enum {\n    SENSOR,\n    ACTUATOR,\n    CONTROLLER\n} DeviceType;\n\ntypedef struct {\n    char name[50];\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "static_const_char_pointer_array",
+    "start_line": 20,
+    "end_line": 20,
+    "comments": "",
+    "code": "static const char *device_type_names[] = { \"Sensor\", \"Actuator\", \"Controller\" };\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "assignment",
+    "start_line": 30,
+    "end_line": 30,
+    "comments": "",
+    "code": "    float total = 0;\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "assignment",
+    "start_line": 31,
+    "end_line": 31,
+    "comments": "",
+    "code": "    for (int i = 0; i < count; i++) {\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "anonymous_initializer_block",
+    "start_line": 39,
+    "end_line": 40,
+    "comments": "",
+    "code": "        { \"TempSensor\", 1, 1.05f, SENSOR },\n        { \"ServoActuator\", 2, 2.10f, ACTUATOR },\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "anonymous_initializer_block",
+    "start_line": 41,
+    "end_line": 51,
+    "comments": "",
+    "code": "        { \"MainController\", 3, 3.00f, CONTROLLER }\n    };\n\n    for (int i = 0; i < 3; i++) {\n        print_device(&devices[i]);\n        printf(\"---------------\\n\");\n    }\n\n    printf(\"Average Firmware Version: %.2f\\n\", average_firmware(devices, 3));\n    return 0;\n}\n"
+  }
+]

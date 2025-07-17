@@ -1,0 +1,409 @@
+[
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "preprocessor_directive",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "preprocessor_directive",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#include <stdlib.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "preprocessor_directive",
+    "start_line": 6,
+    "end_line": 6,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "macro",
+    "start_line": 8,
+    "end_line": 8,
+    "comments": "// coded.c - Complex C example for RAG testing",
+    "code": "#define MAX_USERS 100\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "macro",
+    "start_line": 9,
+    "end_line": 9,
+    "comments": "",
+    "code": "#define APP_NAME \"CodedApp\"\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "enum",
+    "start_line": 11,
+    "end_line": 18,
+    "comments": "",
+    "code": "typedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "assignment",
+    "start_line": 24,
+    "end_line": 24,
+    "comments": "",
+    "code": "static int user_count = 0;\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "assignment",
+    "start_line": 28,
+    "end_line": 28,
+    "comments": "// Initialize the user database",
+    "code": "    user_count = 3;\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "assignment",
+    "start_line": 36,
+    "end_line": 36,
+    "comments": "// Find a user by name",
+    "code": "    for (int i = 0; i < user_count; i++) {\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "find_user",
+    "start_line": 44,
+    "end_line": 45,
+    "code": "    User *u = find_user(name);\n"
+  },
+  {
+    "file": "data/codebase\\coded (4).c",
+    "type": "struct_assignment",
+    "start_line": 47,
+    "end_line": 47,
+    "comments": "// Promote a user to admin",
+    "code": "        u->role = ROLE_ADMIN;\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 54,
+    "end_line": 55,
+    "code": "    printf(\"User List:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "s",
+    "start_line": 56,
+    "end_line": 57,
+    "code": "        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "init_users",
+    "start_line": 62,
+    "end_line": 63,
+    "code": "    init_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 63,
+    "end_line": 64,
+    "code": "    list_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "promote_user",
+    "start_line": 64,
+    "end_line": 65,
+    "code": "    promote_user(\"Bob\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 65,
+    "end_line": 66,
+    "code": "    printf(\"\\nAfter Promotion:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 66,
+    "end_line": 67,
+    "code": "    list_users();\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "preprocessor_directive",
+    "start_line": 3,
+    "end_line": 3,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "preprocessor_directive",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#include <stdlib.h>\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "preprocessor_directive",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "macro",
+    "start_line": 7,
+    "end_line": 7,
+    "comments": "// complex_test.c",
+    "code": "#define MAX_USERS 100\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "macro",
+    "start_line": 8,
+    "end_line": 8,
+    "comments": "",
+    "code": "#define LOG(msg) printf(\"[LOG] %s:%d - %s\\n\", __FILE__, __LINE__, msg)\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "typedef_struct",
+    "start_line": 10,
+    "end_line": 18,
+    "comments": "",
+    "code": "typedef struct {\n    char name[50];\n    int age;\n    union {\n        float gpa;\n        int rank;\n    } performance;\n    enum { STUDENT, TEACHER } role;\n} Person;\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "static_const_char_pointer_array",
+    "start_line": 20,
+    "end_line": 20,
+    "comments": "",
+    "code": "static const char *roles[] = { \"Student\", \"Teacher\" };\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 22,
+    "end_line": 23,
+    "code": "    printf(\"Name: %s\\n\", p->name);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 23,
+    "end_line": 24,
+    "code": "    printf(\"Age: %d\\n\", p->age);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 24,
+    "end_line": 25,
+    "code": "    printf(\"Role: %s\\n\", roles[p->role]);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 26,
+    "end_line": 27,
+    "code": "        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 28,
+    "end_line": 29,
+    "code": "        printf(\"Rank: %d\\n\", p->performance.rank);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "fopen",
+    "start_line": 32,
+    "end_line": 33,
+    "code": "    FILE *fp = fopen(filename, \"r\");\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "assignment",
+    "start_line": 36,
+    "end_line": 36,
+    "comments": "",
+    "code": "    int count = 0;\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "fclose",
+    "start_line": 43,
+    "end_line": 44,
+    "code": "    fclose(fp);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "LOG",
+    "start_line": 48,
+    "end_line": 49,
+    "code": "    LOG(\"Program started\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "load_people",
+    "start_line": 51,
+    "end_line": 52,
+    "code": "    int count = load_people(\"people.txt\", users, MAX_USERS);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "perror",
+    "start_line": 54,
+    "end_line": 55,
+    "code": "        perror(\"Failed to load people\");\n"
+  },
+  {
+    "file": "data/codebase\\complex_code.c",
+    "type": "assignment",
+    "start_line": 59,
+    "end_line": 59,
+    "comments": "",
+    "code": "    for (int i = 0; i < count; i++) {\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "print_person",
+    "start_line": 59,
+    "end_line": 60,
+    "code": "        print_person(&users[i]);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 60,
+    "end_line": 61,
+    "code": "        printf(\"--------\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "LOG",
+    "start_line": 63,
+    "end_line": 64,
+    "code": "    LOG(\"Program finished\");\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "preprocessor_directive",
+    "start_line": 1,
+    "end_line": 1,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "preprocessor_directive",
+    "start_line": 2,
+    "end_line": 2,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "macro",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#define MAX_DEVICES 10\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "macro",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#define COMPANY_NAME \"EmbeddedSoft\"\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "enum",
+    "start_line": 7,
+    "end_line": 14,
+    "comments": "",
+    "code": "typedef enum {\n    SENSOR,\n    ACTUATOR,\n    CONTROLLER\n} DeviceType;\n\ntypedef struct {\n    char name[50];\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "static_const_char_pointer_array",
+    "start_line": 20,
+    "end_line": 20,
+    "comments": "",
+    "code": "static const char *device_type_names[] = { \"Sensor\", \"Actuator\", \"Controller\" };\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 22,
+    "end_line": 23,
+    "code": "    printf(\"Device Name : %s\\n\", d->name);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 23,
+    "end_line": 24,
+    "code": "    printf(\"Device ID   : %d\\n\", d->id);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 24,
+    "end_line": 25,
+    "code": "    printf(\"Firmware    : %.2f\\n\", d->firmware_version);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 25,
+    "end_line": 26,
+    "code": "    printf(\"Type        : %s\\n\", device_type_names[d->type]);\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "assignment",
+    "start_line": 30,
+    "end_line": 30,
+    "comments": "",
+    "code": "    float total = 0;\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "assignment",
+    "start_line": 31,
+    "end_line": 31,
+    "comments": "",
+    "code": "    for (int i = 0; i < count; i++) {\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "anonymous_initializer_block",
+    "start_line": 39,
+    "end_line": 40,
+    "comments": "",
+    "code": "        { \"TempSensor\", 1, 1.05f, SENSOR },\n        { \"ServoActuator\", 2, 2.10f, ACTUATOR },\n"
+  },
+  {
+    "file": "data/codebase\\device-manager.c",
+    "type": "anonymous_initializer_block",
+    "start_line": 41,
+    "end_line": 51,
+    "comments": "",
+    "code": "        { \"MainController\", 3, 3.00f, CONTROLLER }\n    };\n\n    for (int i = 0; i < 3; i++) {\n        print_device(&devices[i]);\n        printf(\"---------------\\n\");\n    }\n\n    printf(\"Average Firmware Version: %.2f\\n\", average_firmware(devices, 3));\n    return 0;\n}\n"
+  }
+]

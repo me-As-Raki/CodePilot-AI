@@ -1,0 +1,975 @@
+[
+  {
+    "type": "struct_assignment",
+    "start_line": 1,
+    "end_line": 150,
+    "code": "/* static-resources/lprint-es.strings */\nstatic const char * const lprint_es_strings =\n\"\\\"media.na_index-3x5_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.na_index-4x6_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x0.25-label_1.25x0.25in\\\" = \\\"1-1/4 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x2.25-label_1.25x2.25in\\\" = \\\"1-1/4 x 2-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.25-label_1.5x0.25in\\\" = \\\"1-1/2 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.5-label_1.5x0.5in\\\" = \\\"1-1/2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x1-label_1.5x1in\\\" = \\\"1-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x2-label_1.5x2in\\\" = \\\"1-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2-part-internet-postage-label_2.25x7.5in\\\" = \\\"2-1/4 x 7-1/2\u02ba Etiqueta de env\u00edo de Internet de 2 partes\\\";\\n\"\n\"\\\"media.oe_2-up-address-label_2.25x3.5in\\\" = \\\"2-1/4 x 3-1/2\u02ba Etiqueta de direcci\u00f3n 2-up\\\";\\n\"\n\"\\\"media.oe_2-up-file-folder-label_1.125x3.4375in\\\" = \\\"1-1/8 x 4-7/16\u02ba Etiqueta de carpeta de archivos 2-up\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25x0.5in\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25xin\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25x1.25in\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25xin\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x4-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x5.5-label_2.25x5.5in\\\" = \\\"2-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.38x5.5-label_2.38x5.5in\\\" = \\\"2-3/8 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x1-label_2.5x1in\\\" = \\\"2-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x2-label_2.5x2in\\\" = \\\"2-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.75x1.25-label_2.75x1.25in\\\" = \\\"2-3/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.9x1-label_2.9x1in\\\" = \\\"2.9 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.37-label_2x0.37in\\\" = \\\"2 x 0.37\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.5-label_2x0.5in\\\" = \\\"2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1-label_2x1in\\\" = \\\"2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1.25-label_2x1.25in\\\" = \\\"2 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x2-label_2x2in\\\" = \\\"2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x3-label_2x3in\\\" = \\\"2 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x4-label_2x4in\\\" = \\\"2 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x5.5-label_2x5.5in\\\" = \\\"2 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3-part-postage-label_2.25x7in\\\" = \\\"2-1/4 x 7\u02ba Etiqueta de env\u00edo de 3 partes\\\";\\n\"\n\"\\\"media.oe_3.25x2-label_3.25x2in\\\" = \\\"3-1/4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5-label_3.25x5in\\\" = \\\"3-1/4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.5-label_3.25x5.5in\\\" = \\\"3-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.83-label_3.25x5.83in\\\" = \\\"3-1/4 x 5-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x7.83-label_3.25x7.83in\\\" = \\\"3-1/4 x 7-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.5x1-label_3.5x1in\\\" = \\\"3-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_30859-paint-can-label_2.25x3.125in\\\" = \\\"2-1/4 x 3-1/8\u02ba Etiqueta de lata de pintura\\\";\\n\"\n\"\\\"media.oe_3x1-label_3x1in\\\" = \\\"3 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x1.25-label_3x1.25in\\\" = \\\"3 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x2-label_3x2in\\\" = \\\"3 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x3-label_3x3in\\\" = \\\"3 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x5-label_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x1-label_4x1in\\\" = \\\"4 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x13-label_4x13in\\\" = \\\"4 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x2-label_4x2in\\\" = \\\"4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x3-label_4x3in\\\" = \\\"4 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x4-label_4x4in\\\" = \\\"4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x5-label_4x5in\\\" = \\\"4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6-label_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6.5-label_4x6.5in\\\" = \\\"4 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x7.83-label_4x7.83in\\\" = \\\"4 x 7-13/16 Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x8-label_4x8in\\\" = \\\"4 x 8\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x1-label_6x1in\\\" = \\\"6 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x13-label_6x13in\\\" = \\\"6 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x2-label_6x2in\\\" = \\\"6 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x3-label_6x3in\\\" = \\\"6 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x4-label_6x4in\\\" = \\\"6 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x5-label_6x5in\\\" = \\\"6 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6-label_6x6in\\\" = \\\"6 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6.5-label_6x6.5in\\\" = \\\"6 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x1-label_8x1in\\\" = \\\"8 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x13-label_8x13in\\\" = \\\"8 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x2-label_8x2in\\\" = \\\"8 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x3-label_8x3in\\\" = \\\"8 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x4-label_8x4in\\\" = \\\"8 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x5-label_8x5in\\\" = \\\"8 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6-label_8x6in\\\" = \\\"8 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6.5-label_8x6.5in\\\" = \\\"8 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_address-label_1.125x3.5in\\\" = \\\"1-1/8 x 3-1/2\u02ba Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_barcode-label_0.75x2.5in\\\" = \\\"3/4 x 2-1/2\u02ba Etiqueta de c\u00f3digo de barras\\\";\\n\"\n\"\\\"media.oe_book-spine-label_1x1.5in\\\" = \\\"1 x 1-1/2\u02ba Etiqueta del lomo del libro\\\";\\n\"\n\"\\\"media.oe_continuous-label_2.125x3600in\\\" = \\\"2-1/8\u02ba Etiqueta continua\\\";\\n\"\n\"\\\"media.oe_dk1201-address_1.1x3.5in\\\" = \\\"DK1201 28 x 89mm Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_dk1202-shipping_2.4x3.9in\\\" = \\\"DK1202 61 x 99mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_dk1203-file-folder_0.66x3.4in\\\" = \\\"DK1203 17 x 86mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_dk1204-multi-purpose_0.66x2.1in\\\" = \\\"DK1204 17 x 53mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_dk1207-cd-dvd_2.2x2.2in\\\" = \\\"DK1207 56mm Etiqueta de CD/DVD\\\";\\n\"\n\"\\\"media.oe_dk1208-large-address_1.4x3.5in\\\" = \\\"DK1208 36 x 89mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_dk1209-small-address_1.1x2.4in\\\" = \\\"DK1209 28 x 61mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_dk1219-round_0.47x0.47in\\\" = \\\"DK1219 12mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.oe_dk1240-large-multi-purpose_1.9x4in\\\" = \\\"DK1240 48 x 102mm Etiqueta multiusos grande\\\";\\n\"\n\"\\\"media.oe_file-folder-label_0.5625x3.4375in\\\" = \\\"9/16 x 3-7/16\u02ba Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_hanging-file-tab-insert_0.5625x2in\\\" = \\\"9/16 x 2\u02ba Etiqueta de inserci\u00f3n de pesta\u00f1a de archivo colgante\\\";\\n\"\n\"\\\"media.oe_internet-postage-confirmation-label_2.3125x10.5in\\\" = \\\"2-5/16 x 10-1/2\u02ba Etiqueta de confirmaci\u00f3n de env\u00edo por Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_1.25x1.625in\\\" = \\\"1-1/4 x 1-5/8\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_2.3125x7in\\\" = \\\"2-3/8 x 7\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_lg-address-label_1.4x3.5in\\\" = \\\"1-4/10 x 3-1/2\u02ba Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_lg-multipurpose-label_2.125x.75in\\\" = \\\"2-1/8 x 3/4\u02ba Large Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_library-barcode-label_0.5x1.875in\\\" = \\\"1/2 x 1-7/8\u02ba Library Barcode Etiqueta\\\";\\n\"\n\"\\\"media.oe_md-appointment-card_2x3.5in\\\" = \\\"2 x 3-1/2\u02ba Tarjeta de Cita Mediana\\\";\\n\"\n\"\\\"media.oe_md-multipurpose-label_2.25x1.25in\\\" = \\\"2-1/4 x 1/1/4\u02ba Etiqueta multiusos mediana\\\";\\n\"\n\"\\\"media.oe_media-label_2.25x2.25in\\\" = \\\"2-1/4 x 2-1/4\u02ba Etiqueta de medios\\\";\\n\"\n\"\\\"media.oe_medium-1in-tape_0.5x1in\\\" = \\\"1/2 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-2in-tape_0.5x2in\\\" = \\\"1/2 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-3in-tape_0.5x3in\\\" = \\\"1/2 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_multipurpose-label_2x2.3125in\\\" = \\\"2 x 2-5/16\u02ba Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_name-badge-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.oe_price-tag-label_0.9375x0.875in\\\" = \\\"15/16 x 7/8\u02ba Etiqueta de precio\\\";\\n\"\n\"\\\"media.oe_return-address-label_0.75x2in\\\" = \\\"3/4 x 2\u02ba Etiqueta de direcci\u00f3n del remitente\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.125x4in\\\" = \\\"2-1/8 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.3125x4in\\\" = \\\"2-5/16 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_sm-multipurpose-label_1x2.125in\\\" = \\\"1 x 2-1/8\u02ba Etiqueta multiusos peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_square-multipurpose-label_1x1in\\\" = \\\"1\u02ba Etiqueta multiusos cuadrada\\\";\\n\"\n\"\\\"media.oe_thin-1in-tape_0.25x1in\\\" = \\\"1/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-2in-tape_0.25x2in\\\" = \\\"1/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-3in-tape_0.25x3in\\\" = \\\"1/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-multipurpose-label_0.375x2.8125in\\\" = \\\"3/8 x 2-13/16\u02ba Etiqueta delgada multiusos\\\";\\n\"\n\"\\\"media.oe_thinner-1in-tape_0.375x1in\\\" = \\\"3/8 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-2in-tape_0.375x2in\\\" = \\\"3/8 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-3in-tape_0.375x3in\\\" = \\\"3/8 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_video-spine-label_0.75x5.875in\\\" = \\\"3/4 x 5-7/8\u02ba Etiqueta del lomo del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_video-top-label_1.8x3.1in\\\" = \\\"1.8 x 3.1\u02ba Etiqueta superior del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_wide-1in-tape_1x1in\\\" = \\\"1 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-2in-tape_1x2in\\\" = \\\"1 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-3in-tape_1x3in\\\" = \\\"1 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-1in-tape_0.75x1in\\\" = \\\"3/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-2in-tape_0.75x2in\\\" = \\\"3/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-3in-tape_0.75x3in\\\" = \\\"3/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.om_35mm-slide_9x37mm\\\" = \\\"35mm Etiqueta de diapositiva\\\";\\n\"\n\"\\\"media.om_4-part-label_48x96mm\\\" = \\\"48 x 96mm Etiqueta de 4 partes\\\";\\n\"\n\"\\\"media.om_8mm-spine_9x66mm\\\" = \\\"8mm Etiqueta del lomo\\\";\\n\"\n\"\\\"media.om_address-large_35x83mm\\\" = \\\"35 x 83mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.om_address-small_24x83mm\\\" = \\\"24 x 83mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.om_cut-hanging-13_32x78mm\\\" = \\\"32 x 78mm 1/3 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_cut-hanging-15_32x40mm\\\" = \\\"32 x 40mm 1/5 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_diskette_48x64mm\\\" = \\\"48 x 64mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_diskette_54x70mm\\\" = \\\"54 x 70mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_euro-file-folder_39x49mm\\\" = \\\"39 x 49mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-narrow_38x186mm\\\" = \\\"38 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-wide_48x186mm\\\" = \\\"48 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-name-badge-large_48x79mm\\\" = \\\"48 x 79mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_euro-name-badge_38x67mm\\\" = \\\"38 x 67mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_file-folder_13x81mm\\\" = \\\"13 x 81mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_jewelry_27x48mm\\\" = \\\"27 x 48mm Etiqueta de joyer\u00eda\\\";\\n\"\n\"\\\"media.om_media-badge_48x64mm\\\" = \\\"48 x 64mm Etiqueta de insignia de medios\\\";\\n\"\n\"\\\"media.om_multi-purpose_24x44mm\\\" = \\\"24 x 44mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.om_retail-label_32x37mm\\\" = \\\"32 x 37mm Etiqueta minorista\\\";\\n\"\n\"\\\"media.om_return_16x43mm\\\" = \\\"16 x 43mm Etiqueta de devoluci\u00f3n\\\";\\n\"\n\"\\\"media.om_round_22x24mm\\\" = \\\"22mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.om_shipping_48x96mm\\\" = \\\"48 x 96mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.om_top-coated-paper_48x140mm\\\" = \\\"48 x 140mm Papel estucado superior\\\";\\n\"\n\"\\\"media.om_vhs-face_45x72mm\\\" = \\\"45 x 72mm Etiqueta de cara VHS\\\";\\n\"\n\"\\\"media.om_vhs-spine_18x141mm\\\" = \\\"18 x 141mm Etiqueta de lomo VHS\\\";\\n\"\n\"\\\"media.om_zip-disk_48x55mm\\\" = \\\"48 x 55mm Etiqueta de disco zip\\\";\\n\"\n\"\\\"New Custom Size\\\" = \\\"Nuevo tama\u00f1o personalizado\\\";\\n\"\n;\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 2,
+    "end_line": 149,
+    "code": "static const char * const lprint_es_strings =\n\"\\\"media.na_index-3x5_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.na_index-4x6_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x0.25-label_1.25x0.25in\\\" = \\\"1-1/4 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x2.25-label_1.25x2.25in\\\" = \\\"1-1/4 x 2-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.25-label_1.5x0.25in\\\" = \\\"1-1/2 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.5-label_1.5x0.5in\\\" = \\\"1-1/2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x1-label_1.5x1in\\\" = \\\"1-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x2-label_1.5x2in\\\" = \\\"1-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2-part-internet-postage-label_2.25x7.5in\\\" = \\\"2-1/4 x 7-1/2\u02ba Etiqueta de env\u00edo de Internet de 2 partes\\\";\\n\"\n\"\\\"media.oe_2-up-address-label_2.25x3.5in\\\" = \\\"2-1/4 x 3-1/2\u02ba Etiqueta de direcci\u00f3n 2-up\\\";\\n\"\n\"\\\"media.oe_2-up-file-folder-label_1.125x3.4375in\\\" = \\\"1-1/8 x 4-7/16\u02ba Etiqueta de carpeta de archivos 2-up\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25x0.5in\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25xin\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25x1.25in\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25xin\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x4-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x5.5-label_2.25x5.5in\\\" = \\\"2-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.38x5.5-label_2.38x5.5in\\\" = \\\"2-3/8 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x1-label_2.5x1in\\\" = \\\"2-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x2-label_2.5x2in\\\" = \\\"2-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.75x1.25-label_2.75x1.25in\\\" = \\\"2-3/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.9x1-label_2.9x1in\\\" = \\\"2.9 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.37-label_2x0.37in\\\" = \\\"2 x 0.37\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.5-label_2x0.5in\\\" = \\\"2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1-label_2x1in\\\" = \\\"2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1.25-label_2x1.25in\\\" = \\\"2 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x2-label_2x2in\\\" = \\\"2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x3-label_2x3in\\\" = \\\"2 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x4-label_2x4in\\\" = \\\"2 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x5.5-label_2x5.5in\\\" = \\\"2 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3-part-postage-label_2.25x7in\\\" = \\\"2-1/4 x 7\u02ba Etiqueta de env\u00edo de 3 partes\\\";\\n\"\n\"\\\"media.oe_3.25x2-label_3.25x2in\\\" = \\\"3-1/4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5-label_3.25x5in\\\" = \\\"3-1/4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.5-label_3.25x5.5in\\\" = \\\"3-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.83-label_3.25x5.83in\\\" = \\\"3-1/4 x 5-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x7.83-label_3.25x7.83in\\\" = \\\"3-1/4 x 7-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.5x1-label_3.5x1in\\\" = \\\"3-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_30859-paint-can-label_2.25x3.125in\\\" = \\\"2-1/4 x 3-1/8\u02ba Etiqueta de lata de pintura\\\";\\n\"\n\"\\\"media.oe_3x1-label_3x1in\\\" = \\\"3 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x1.25-label_3x1.25in\\\" = \\\"3 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x2-label_3x2in\\\" = \\\"3 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x3-label_3x3in\\\" = \\\"3 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x5-label_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x1-label_4x1in\\\" = \\\"4 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x13-label_4x13in\\\" = \\\"4 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x2-label_4x2in\\\" = \\\"4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x3-label_4x3in\\\" = \\\"4 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x4-label_4x4in\\\" = \\\"4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x5-label_4x5in\\\" = \\\"4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6-label_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6.5-label_4x6.5in\\\" = \\\"4 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x7.83-label_4x7.83in\\\" = \\\"4 x 7-13/16 Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x8-label_4x8in\\\" = \\\"4 x 8\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x1-label_6x1in\\\" = \\\"6 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x13-label_6x13in\\\" = \\\"6 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x2-label_6x2in\\\" = \\\"6 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x3-label_6x3in\\\" = \\\"6 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x4-label_6x4in\\\" = \\\"6 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x5-label_6x5in\\\" = \\\"6 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6-label_6x6in\\\" = \\\"6 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6.5-label_6x6.5in\\\" = \\\"6 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x1-label_8x1in\\\" = \\\"8 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x13-label_8x13in\\\" = \\\"8 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x2-label_8x2in\\\" = \\\"8 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x3-label_8x3in\\\" = \\\"8 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x4-label_8x4in\\\" = \\\"8 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x5-label_8x5in\\\" = \\\"8 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6-label_8x6in\\\" = \\\"8 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6.5-label_8x6.5in\\\" = \\\"8 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_address-label_1.125x3.5in\\\" = \\\"1-1/8 x 3-1/2\u02ba Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_barcode-label_0.75x2.5in\\\" = \\\"3/4 x 2-1/2\u02ba Etiqueta de c\u00f3digo de barras\\\";\\n\"\n\"\\\"media.oe_book-spine-label_1x1.5in\\\" = \\\"1 x 1-1/2\u02ba Etiqueta del lomo del libro\\\";\\n\"\n\"\\\"media.oe_continuous-label_2.125x3600in\\\" = \\\"2-1/8\u02ba Etiqueta continua\\\";\\n\"\n\"\\\"media.oe_dk1201-address_1.1x3.5in\\\" = \\\"DK1201 28 x 89mm Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_dk1202-shipping_2.4x3.9in\\\" = \\\"DK1202 61 x 99mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_dk1203-file-folder_0.66x3.4in\\\" = \\\"DK1203 17 x 86mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_dk1204-multi-purpose_0.66x2.1in\\\" = \\\"DK1204 17 x 53mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_dk1207-cd-dvd_2.2x2.2in\\\" = \\\"DK1207 56mm Etiqueta de CD/DVD\\\";\\n\"\n\"\\\"media.oe_dk1208-large-address_1.4x3.5in\\\" = \\\"DK1208 36 x 89mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_dk1209-small-address_1.1x2.4in\\\" = \\\"DK1209 28 x 61mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_dk1219-round_0.47x0.47in\\\" = \\\"DK1219 12mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.oe_dk1240-large-multi-purpose_1.9x4in\\\" = \\\"DK1240 48 x 102mm Etiqueta multiusos grande\\\";\\n\"\n\"\\\"media.oe_file-folder-label_0.5625x3.4375in\\\" = \\\"9/16 x 3-7/16\u02ba Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_hanging-file-tab-insert_0.5625x2in\\\" = \\\"9/16 x 2\u02ba Etiqueta de inserci\u00f3n de pesta\u00f1a de archivo colgante\\\";\\n\"\n\"\\\"media.oe_internet-postage-confirmation-label_2.3125x10.5in\\\" = \\\"2-5/16 x 10-1/2\u02ba Etiqueta de confirmaci\u00f3n de env\u00edo por Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_1.25x1.625in\\\" = \\\"1-1/4 x 1-5/8\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_2.3125x7in\\\" = \\\"2-3/8 x 7\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_lg-address-label_1.4x3.5in\\\" = \\\"1-4/10 x 3-1/2\u02ba Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_lg-multipurpose-label_2.125x.75in\\\" = \\\"2-1/8 x 3/4\u02ba Large Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_library-barcode-label_0.5x1.875in\\\" = \\\"1/2 x 1-7/8\u02ba Library Barcode Etiqueta\\\";\\n\"\n\"\\\"media.oe_md-appointment-card_2x3.5in\\\" = \\\"2 x 3-1/2\u02ba Tarjeta de Cita Mediana\\\";\\n\"\n\"\\\"media.oe_md-multipurpose-label_2.25x1.25in\\\" = \\\"2-1/4 x 1/1/4\u02ba Etiqueta multiusos mediana\\\";\\n\"\n\"\\\"media.oe_media-label_2.25x2.25in\\\" = \\\"2-1/4 x 2-1/4\u02ba Etiqueta de medios\\\";\\n\"\n\"\\\"media.oe_medium-1in-tape_0.5x1in\\\" = \\\"1/2 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-2in-tape_0.5x2in\\\" = \\\"1/2 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-3in-tape_0.5x3in\\\" = \\\"1/2 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_multipurpose-label_2x2.3125in\\\" = \\\"2 x 2-5/16\u02ba Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_name-badge-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.oe_price-tag-label_0.9375x0.875in\\\" = \\\"15/16 x 7/8\u02ba Etiqueta de precio\\\";\\n\"\n\"\\\"media.oe_return-address-label_0.75x2in\\\" = \\\"3/4 x 2\u02ba Etiqueta de direcci\u00f3n del remitente\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.125x4in\\\" = \\\"2-1/8 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.3125x4in\\\" = \\\"2-5/16 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_sm-multipurpose-label_1x2.125in\\\" = \\\"1 x 2-1/8\u02ba Etiqueta multiusos peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_square-multipurpose-label_1x1in\\\" = \\\"1\u02ba Etiqueta multiusos cuadrada\\\";\\n\"\n\"\\\"media.oe_thin-1in-tape_0.25x1in\\\" = \\\"1/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-2in-tape_0.25x2in\\\" = \\\"1/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-3in-tape_0.25x3in\\\" = \\\"1/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-multipurpose-label_0.375x2.8125in\\\" = \\\"3/8 x 2-13/16\u02ba Etiqueta delgada multiusos\\\";\\n\"\n\"\\\"media.oe_thinner-1in-tape_0.375x1in\\\" = \\\"3/8 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-2in-tape_0.375x2in\\\" = \\\"3/8 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-3in-tape_0.375x3in\\\" = \\\"3/8 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_video-spine-label_0.75x5.875in\\\" = \\\"3/4 x 5-7/8\u02ba Etiqueta del lomo del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_video-top-label_1.8x3.1in\\\" = \\\"1.8 x 3.1\u02ba Etiqueta superior del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_wide-1in-tape_1x1in\\\" = \\\"1 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-2in-tape_1x2in\\\" = \\\"1 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-3in-tape_1x3in\\\" = \\\"1 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-1in-tape_0.75x1in\\\" = \\\"3/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-2in-tape_0.75x2in\\\" = \\\"3/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-3in-tape_0.75x3in\\\" = \\\"3/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.om_35mm-slide_9x37mm\\\" = \\\"35mm Etiqueta de diapositiva\\\";\\n\"\n\"\\\"media.om_4-part-label_48x96mm\\\" = \\\"48 x 96mm Etiqueta de 4 partes\\\";\\n\"\n\"\\\"media.om_8mm-spine_9x66mm\\\" = \\\"8mm Etiqueta del lomo\\\";\\n\"\n\"\\\"media.om_address-large_35x83mm\\\" = \\\"35 x 83mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.om_address-small_24x83mm\\\" = \\\"24 x 83mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.om_cut-hanging-13_32x78mm\\\" = \\\"32 x 78mm 1/3 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_cut-hanging-15_32x40mm\\\" = \\\"32 x 40mm 1/5 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_diskette_48x64mm\\\" = \\\"48 x 64mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_diskette_54x70mm\\\" = \\\"54 x 70mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_euro-file-folder_39x49mm\\\" = \\\"39 x 49mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-narrow_38x186mm\\\" = \\\"38 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-wide_48x186mm\\\" = \\\"48 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-name-badge-large_48x79mm\\\" = \\\"48 x 79mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_euro-name-badge_38x67mm\\\" = \\\"38 x 67mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_file-folder_13x81mm\\\" = \\\"13 x 81mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_jewelry_27x48mm\\\" = \\\"27 x 48mm Etiqueta de joyer\u00eda\\\";\\n\"\n\"\\\"media.om_media-badge_48x64mm\\\" = \\\"48 x 64mm Etiqueta de insignia de medios\\\";\\n\"\n\"\\\"media.om_multi-purpose_24x44mm\\\" = \\\"24 x 44mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.om_retail-label_32x37mm\\\" = \\\"32 x 37mm Etiqueta minorista\\\";\\n\"\n\"\\\"media.om_return_16x43mm\\\" = \\\"16 x 43mm Etiqueta de devoluci\u00f3n\\\";\\n\"\n\"\\\"media.om_round_22x24mm\\\" = \\\"22mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.om_shipping_48x96mm\\\" = \\\"48 x 96mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.om_top-coated-paper_48x140mm\\\" = \\\"48 x 140mm Papel estucado superior\\\";\\n\"\n\"\\\"media.om_vhs-face_45x72mm\\\" = \\\"45 x 72mm Etiqueta de cara VHS\\\";\\n\"\n\"\\\"media.om_vhs-spine_18x141mm\\\" = \\\"18 x 141mm Etiqueta de lomo VHS\\\";\\n\"\n\"\\\"media.om_zip-disk_48x55mm\\\" = \\\"48 x 55mm Etiqueta de disco zip\\\";\\n\"\n\"\\\"New Custom Size\\\" = \\\"Nuevo tama\u00f1o personalizado\\\";\\n\"\n;\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 2,
+    "end_line": 149,
+    "code": "static const char * const lprint_es_strings =\n\"\\\"media.na_index-3x5_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.na_index-4x6_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x0.25-label_1.25x0.25in\\\" = \\\"1-1/4 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x2.25-label_1.25x2.25in\\\" = \\\"1-1/4 x 2-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.25-label_1.5x0.25in\\\" = \\\"1-1/2 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.5-label_1.5x0.5in\\\" = \\\"1-1/2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x1-label_1.5x1in\\\" = \\\"1-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x2-label_1.5x2in\\\" = \\\"1-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2-part-internet-postage-label_2.25x7.5in\\\" = \\\"2-1/4 x 7-1/2\u02ba Etiqueta de env\u00edo de Internet de 2 partes\\\";\\n\"\n\"\\\"media.oe_2-up-address-label_2.25x3.5in\\\" = \\\"2-1/4 x 3-1/2\u02ba Etiqueta de direcci\u00f3n 2-up\\\";\\n\"\n\"\\\"media.oe_2-up-file-folder-label_1.125x3.4375in\\\" = \\\"1-1/8 x 4-7/16\u02ba Etiqueta de carpeta de archivos 2-up\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25x0.5in\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25xin\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25x1.25in\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25xin\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x4-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x5.5-label_2.25x5.5in\\\" = \\\"2-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.38x5.5-label_2.38x5.5in\\\" = \\\"2-3/8 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x1-label_2.5x1in\\\" = \\\"2-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x2-label_2.5x2in\\\" = \\\"2-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.75x1.25-label_2.75x1.25in\\\" = \\\"2-3/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.9x1-label_2.9x1in\\\" = \\\"2.9 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.37-label_2x0.37in\\\" = \\\"2 x 0.37\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.5-label_2x0.5in\\\" = \\\"2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1-label_2x1in\\\" = \\\"2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1.25-label_2x1.25in\\\" = \\\"2 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x2-label_2x2in\\\" = \\\"2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x3-label_2x3in\\\" = \\\"2 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x4-label_2x4in\\\" = \\\"2 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x5.5-label_2x5.5in\\\" = \\\"2 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3-part-postage-label_2.25x7in\\\" = \\\"2-1/4 x 7\u02ba Etiqueta de env\u00edo de 3 partes\\\";\\n\"\n\"\\\"media.oe_3.25x2-label_3.25x2in\\\" = \\\"3-1/4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5-label_3.25x5in\\\" = \\\"3-1/4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.5-label_3.25x5.5in\\\" = \\\"3-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.83-label_3.25x5.83in\\\" = \\\"3-1/4 x 5-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x7.83-label_3.25x7.83in\\\" = \\\"3-1/4 x 7-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.5x1-label_3.5x1in\\\" = \\\"3-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_30859-paint-can-label_2.25x3.125in\\\" = \\\"2-1/4 x 3-1/8\u02ba Etiqueta de lata de pintura\\\";\\n\"\n\"\\\"media.oe_3x1-label_3x1in\\\" = \\\"3 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x1.25-label_3x1.25in\\\" = \\\"3 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x2-label_3x2in\\\" = \\\"3 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x3-label_3x3in\\\" = \\\"3 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x5-label_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x1-label_4x1in\\\" = \\\"4 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x13-label_4x13in\\\" = \\\"4 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x2-label_4x2in\\\" = \\\"4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x3-label_4x3in\\\" = \\\"4 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x4-label_4x4in\\\" = \\\"4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x5-label_4x5in\\\" = \\\"4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6-label_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6.5-label_4x6.5in\\\" = \\\"4 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x7.83-label_4x7.83in\\\" = \\\"4 x 7-13/16 Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x8-label_4x8in\\\" = \\\"4 x 8\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x1-label_6x1in\\\" = \\\"6 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x13-label_6x13in\\\" = \\\"6 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x2-label_6x2in\\\" = \\\"6 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x3-label_6x3in\\\" = \\\"6 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x4-label_6x4in\\\" = \\\"6 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x5-label_6x5in\\\" = \\\"6 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6-label_6x6in\\\" = \\\"6 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6.5-label_6x6.5in\\\" = \\\"6 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x1-label_8x1in\\\" = \\\"8 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x13-label_8x13in\\\" = \\\"8 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x2-label_8x2in\\\" = \\\"8 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x3-label_8x3in\\\" = \\\"8 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x4-label_8x4in\\\" = \\\"8 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x5-label_8x5in\\\" = \\\"8 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6-label_8x6in\\\" = \\\"8 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6.5-label_8x6.5in\\\" = \\\"8 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_address-label_1.125x3.5in\\\" = \\\"1-1/8 x 3-1/2\u02ba Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_barcode-label_0.75x2.5in\\\" = \\\"3/4 x 2-1/2\u02ba Etiqueta de c\u00f3digo de barras\\\";\\n\"\n\"\\\"media.oe_book-spine-label_1x1.5in\\\" = \\\"1 x 1-1/2\u02ba Etiqueta del lomo del libro\\\";\\n\"\n\"\\\"media.oe_continuous-label_2.125x3600in\\\" = \\\"2-1/8\u02ba Etiqueta continua\\\";\\n\"\n\"\\\"media.oe_dk1201-address_1.1x3.5in\\\" = \\\"DK1201 28 x 89mm Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_dk1202-shipping_2.4x3.9in\\\" = \\\"DK1202 61 x 99mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_dk1203-file-folder_0.66x3.4in\\\" = \\\"DK1203 17 x 86mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_dk1204-multi-purpose_0.66x2.1in\\\" = \\\"DK1204 17 x 53mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_dk1207-cd-dvd_2.2x2.2in\\\" = \\\"DK1207 56mm Etiqueta de CD/DVD\\\";\\n\"\n\"\\\"media.oe_dk1208-large-address_1.4x3.5in\\\" = \\\"DK1208 36 x 89mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_dk1209-small-address_1.1x2.4in\\\" = \\\"DK1209 28 x 61mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_dk1219-round_0.47x0.47in\\\" = \\\"DK1219 12mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.oe_dk1240-large-multi-purpose_1.9x4in\\\" = \\\"DK1240 48 x 102mm Etiqueta multiusos grande\\\";\\n\"\n\"\\\"media.oe_file-folder-label_0.5625x3.4375in\\\" = \\\"9/16 x 3-7/16\u02ba Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_hanging-file-tab-insert_0.5625x2in\\\" = \\\"9/16 x 2\u02ba Etiqueta de inserci\u00f3n de pesta\u00f1a de archivo colgante\\\";\\n\"\n\"\\\"media.oe_internet-postage-confirmation-label_2.3125x10.5in\\\" = \\\"2-5/16 x 10-1/2\u02ba Etiqueta de confirmaci\u00f3n de env\u00edo por Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_1.25x1.625in\\\" = \\\"1-1/4 x 1-5/8\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_2.3125x7in\\\" = \\\"2-3/8 x 7\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_lg-address-label_1.4x3.5in\\\" = \\\"1-4/10 x 3-1/2\u02ba Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_lg-multipurpose-label_2.125x.75in\\\" = \\\"2-1/8 x 3/4\u02ba Large Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_library-barcode-label_0.5x1.875in\\\" = \\\"1/2 x 1-7/8\u02ba Library Barcode Etiqueta\\\";\\n\"\n\"\\\"media.oe_md-appointment-card_2x3.5in\\\" = \\\"2 x 3-1/2\u02ba Tarjeta de Cita Mediana\\\";\\n\"\n\"\\\"media.oe_md-multipurpose-label_2.25x1.25in\\\" = \\\"2-1/4 x 1/1/4\u02ba Etiqueta multiusos mediana\\\";\\n\"\n\"\\\"media.oe_media-label_2.25x2.25in\\\" = \\\"2-1/4 x 2-1/4\u02ba Etiqueta de medios\\\";\\n\"\n\"\\\"media.oe_medium-1in-tape_0.5x1in\\\" = \\\"1/2 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-2in-tape_0.5x2in\\\" = \\\"1/2 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-3in-tape_0.5x3in\\\" = \\\"1/2 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_multipurpose-label_2x2.3125in\\\" = \\\"2 x 2-5/16\u02ba Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_name-badge-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.oe_price-tag-label_0.9375x0.875in\\\" = \\\"15/16 x 7/8\u02ba Etiqueta de precio\\\";\\n\"\n\"\\\"media.oe_return-address-label_0.75x2in\\\" = \\\"3/4 x 2\u02ba Etiqueta de direcci\u00f3n del remitente\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.125x4in\\\" = \\\"2-1/8 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.3125x4in\\\" = \\\"2-5/16 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_sm-multipurpose-label_1x2.125in\\\" = \\\"1 x 2-1/8\u02ba Etiqueta multiusos peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_square-multipurpose-label_1x1in\\\" = \\\"1\u02ba Etiqueta multiusos cuadrada\\\";\\n\"\n\"\\\"media.oe_thin-1in-tape_0.25x1in\\\" = \\\"1/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-2in-tape_0.25x2in\\\" = \\\"1/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-3in-tape_0.25x3in\\\" = \\\"1/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-multipurpose-label_0.375x2.8125in\\\" = \\\"3/8 x 2-13/16\u02ba Etiqueta delgada multiusos\\\";\\n\"\n\"\\\"media.oe_thinner-1in-tape_0.375x1in\\\" = \\\"3/8 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-2in-tape_0.375x2in\\\" = \\\"3/8 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-3in-tape_0.375x3in\\\" = \\\"3/8 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_video-spine-label_0.75x5.875in\\\" = \\\"3/4 x 5-7/8\u02ba Etiqueta del lomo del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_video-top-label_1.8x3.1in\\\" = \\\"1.8 x 3.1\u02ba Etiqueta superior del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_wide-1in-tape_1x1in\\\" = \\\"1 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-2in-tape_1x2in\\\" = \\\"1 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-3in-tape_1x3in\\\" = \\\"1 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-1in-tape_0.75x1in\\\" = \\\"3/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-2in-tape_0.75x2in\\\" = \\\"3/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-3in-tape_0.75x3in\\\" = \\\"3/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.om_35mm-slide_9x37mm\\\" = \\\"35mm Etiqueta de diapositiva\\\";\\n\"\n\"\\\"media.om_4-part-label_48x96mm\\\" = \\\"48 x 96mm Etiqueta de 4 partes\\\";\\n\"\n\"\\\"media.om_8mm-spine_9x66mm\\\" = \\\"8mm Etiqueta del lomo\\\";\\n\"\n\"\\\"media.om_address-large_35x83mm\\\" = \\\"35 x 83mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.om_address-small_24x83mm\\\" = \\\"24 x 83mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.om_cut-hanging-13_32x78mm\\\" = \\\"32 x 78mm 1/3 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_cut-hanging-15_32x40mm\\\" = \\\"32 x 40mm 1/5 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_diskette_48x64mm\\\" = \\\"48 x 64mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_diskette_54x70mm\\\" = \\\"54 x 70mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_euro-file-folder_39x49mm\\\" = \\\"39 x 49mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-narrow_38x186mm\\\" = \\\"38 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-wide_48x186mm\\\" = \\\"48 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-name-badge-large_48x79mm\\\" = \\\"48 x 79mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_euro-name-badge_38x67mm\\\" = \\\"38 x 67mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_file-folder_13x81mm\\\" = \\\"13 x 81mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_jewelry_27x48mm\\\" = \\\"27 x 48mm Etiqueta de joyer\u00eda\\\";\\n\"\n\"\\\"media.om_media-badge_48x64mm\\\" = \\\"48 x 64mm Etiqueta de insignia de medios\\\";\\n\"\n\"\\\"media.om_multi-purpose_24x44mm\\\" = \\\"24 x 44mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.om_retail-label_32x37mm\\\" = \\\"32 x 37mm Etiqueta minorista\\\";\\n\"\n\"\\\"media.om_return_16x43mm\\\" = \\\"16 x 43mm Etiqueta de devoluci\u00f3n\\\";\\n\"\n\"\\\"media.om_round_22x24mm\\\" = \\\"22mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.om_shipping_48x96mm\\\" = \\\"48 x 96mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.om_top-coated-paper_48x140mm\\\" = \\\"48 x 140mm Papel estucado superior\\\";\\n\"\n\"\\\"media.om_vhs-face_45x72mm\\\" = \\\"45 x 72mm Etiqueta de cara VHS\\\";\\n\"\n\"\\\"media.om_vhs-spine_18x141mm\\\" = \\\"18 x 141mm Etiqueta de lomo VHS\\\";\\n\"\n\"\\\"media.om_zip-disk_48x55mm\\\" = \\\"48 x 55mm Etiqueta de disco zip\\\";\\n\"\n\"\\\"New Custom Size\\\" = \\\"Nuevo tama\u00f1o personalizado\\\";\\n\"\n;\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 2,
+    "end_line": 148,
+    "code": "* const lprint_es_strings =\n\"\\\"media.na_index-3x5_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.na_index-4x6_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x0.25-label_1.25x0.25in\\\" = \\\"1-1/4 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x2.25-label_1.25x2.25in\\\" = \\\"1-1/4 x 2-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.25-label_1.5x0.25in\\\" = \\\"1-1/2 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.5-label_1.5x0.5in\\\" = \\\"1-1/2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x1-label_1.5x1in\\\" = \\\"1-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x2-label_1.5x2in\\\" = \\\"1-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2-part-internet-postage-label_2.25x7.5in\\\" = \\\"2-1/4 x 7-1/2\u02ba Etiqueta de env\u00edo de Internet de 2 partes\\\";\\n\"\n\"\\\"media.oe_2-up-address-label_2.25x3.5in\\\" = \\\"2-1/4 x 3-1/2\u02ba Etiqueta de direcci\u00f3n 2-up\\\";\\n\"\n\"\\\"media.oe_2-up-file-folder-label_1.125x3.4375in\\\" = \\\"1-1/8 x 4-7/16\u02ba Etiqueta de carpeta de archivos 2-up\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25x0.5in\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25xin\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25x1.25in\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25xin\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x4-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x5.5-label_2.25x5.5in\\\" = \\\"2-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.38x5.5-label_2.38x5.5in\\\" = \\\"2-3/8 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x1-label_2.5x1in\\\" = \\\"2-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x2-label_2.5x2in\\\" = \\\"2-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.75x1.25-label_2.75x1.25in\\\" = \\\"2-3/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.9x1-label_2.9x1in\\\" = \\\"2.9 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.37-label_2x0.37in\\\" = \\\"2 x 0.37\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.5-label_2x0.5in\\\" = \\\"2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1-label_2x1in\\\" = \\\"2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1.25-label_2x1.25in\\\" = \\\"2 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x2-label_2x2in\\\" = \\\"2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x3-label_2x3in\\\" = \\\"2 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x4-label_2x4in\\\" = \\\"2 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x5.5-label_2x5.5in\\\" = \\\"2 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3-part-postage-label_2.25x7in\\\" = \\\"2-1/4 x 7\u02ba Etiqueta de env\u00edo de 3 partes\\\";\\n\"\n\"\\\"media.oe_3.25x2-label_3.25x2in\\\" = \\\"3-1/4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5-label_3.25x5in\\\" = \\\"3-1/4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.5-label_3.25x5.5in\\\" = \\\"3-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.83-label_3.25x5.83in\\\" = \\\"3-1/4 x 5-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x7.83-label_3.25x7.83in\\\" = \\\"3-1/4 x 7-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.5x1-label_3.5x1in\\\" = \\\"3-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_30859-paint-can-label_2.25x3.125in\\\" = \\\"2-1/4 x 3-1/8\u02ba Etiqueta de lata de pintura\\\";\\n\"\n\"\\\"media.oe_3x1-label_3x1in\\\" = \\\"3 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x1.25-label_3x1.25in\\\" = \\\"3 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x2-label_3x2in\\\" = \\\"3 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x3-label_3x3in\\\" = \\\"3 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x5-label_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x1-label_4x1in\\\" = \\\"4 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x13-label_4x13in\\\" = \\\"4 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x2-label_4x2in\\\" = \\\"4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x3-label_4x3in\\\" = \\\"4 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x4-label_4x4in\\\" = \\\"4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x5-label_4x5in\\\" = \\\"4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6-label_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6.5-label_4x6.5in\\\" = \\\"4 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x7.83-label_4x7.83in\\\" = \\\"4 x 7-13/16 Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x8-label_4x8in\\\" = \\\"4 x 8\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x1-label_6x1in\\\" = \\\"6 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x13-label_6x13in\\\" = \\\"6 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x2-label_6x2in\\\" = \\\"6 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x3-label_6x3in\\\" = \\\"6 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x4-label_6x4in\\\" = \\\"6 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x5-label_6x5in\\\" = \\\"6 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6-label_6x6in\\\" = \\\"6 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6.5-label_6x6.5in\\\" = \\\"6 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x1-label_8x1in\\\" = \\\"8 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x13-label_8x13in\\\" = \\\"8 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x2-label_8x2in\\\" = \\\"8 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x3-label_8x3in\\\" = \\\"8 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x4-label_8x4in\\\" = \\\"8 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x5-label_8x5in\\\" = \\\"8 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6-label_8x6in\\\" = \\\"8 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6.5-label_8x6.5in\\\" = \\\"8 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_address-label_1.125x3.5in\\\" = \\\"1-1/8 x 3-1/2\u02ba Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_barcode-label_0.75x2.5in\\\" = \\\"3/4 x 2-1/2\u02ba Etiqueta de c\u00f3digo de barras\\\";\\n\"\n\"\\\"media.oe_book-spine-label_1x1.5in\\\" = \\\"1 x 1-1/2\u02ba Etiqueta del lomo del libro\\\";\\n\"\n\"\\\"media.oe_continuous-label_2.125x3600in\\\" = \\\"2-1/8\u02ba Etiqueta continua\\\";\\n\"\n\"\\\"media.oe_dk1201-address_1.1x3.5in\\\" = \\\"DK1201 28 x 89mm Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_dk1202-shipping_2.4x3.9in\\\" = \\\"DK1202 61 x 99mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_dk1203-file-folder_0.66x3.4in\\\" = \\\"DK1203 17 x 86mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_dk1204-multi-purpose_0.66x2.1in\\\" = \\\"DK1204 17 x 53mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_dk1207-cd-dvd_2.2x2.2in\\\" = \\\"DK1207 56mm Etiqueta de CD/DVD\\\";\\n\"\n\"\\\"media.oe_dk1208-large-address_1.4x3.5in\\\" = \\\"DK1208 36 x 89mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_dk1209-small-address_1.1x2.4in\\\" = \\\"DK1209 28 x 61mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_dk1219-round_0.47x0.47in\\\" = \\\"DK1219 12mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.oe_dk1240-large-multi-purpose_1.9x4in\\\" = \\\"DK1240 48 x 102mm Etiqueta multiusos grande\\\";\\n\"\n\"\\\"media.oe_file-folder-label_0.5625x3.4375in\\\" = \\\"9/16 x 3-7/16\u02ba Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_hanging-file-tab-insert_0.5625x2in\\\" = \\\"9/16 x 2\u02ba Etiqueta de inserci\u00f3n de pesta\u00f1a de archivo colgante\\\";\\n\"\n\"\\\"media.oe_internet-postage-confirmation-label_2.3125x10.5in\\\" = \\\"2-5/16 x 10-1/2\u02ba Etiqueta de confirmaci\u00f3n de env\u00edo por Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_1.25x1.625in\\\" = \\\"1-1/4 x 1-5/8\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_2.3125x7in\\\" = \\\"2-3/8 x 7\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_lg-address-label_1.4x3.5in\\\" = \\\"1-4/10 x 3-1/2\u02ba Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_lg-multipurpose-label_2.125x.75in\\\" = \\\"2-1/8 x 3/4\u02ba Large Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_library-barcode-label_0.5x1.875in\\\" = \\\"1/2 x 1-7/8\u02ba Library Barcode Etiqueta\\\";\\n\"\n\"\\\"media.oe_md-appointment-card_2x3.5in\\\" = \\\"2 x 3-1/2\u02ba Tarjeta de Cita Mediana\\\";\\n\"\n\"\\\"media.oe_md-multipurpose-label_2.25x1.25in\\\" = \\\"2-1/4 x 1/1/4\u02ba Etiqueta multiusos mediana\\\";\\n\"\n\"\\\"media.oe_media-label_2.25x2.25in\\\" = \\\"2-1/4 x 2-1/4\u02ba Etiqueta de medios\\\";\\n\"\n\"\\\"media.oe_medium-1in-tape_0.5x1in\\\" = \\\"1/2 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-2in-tape_0.5x2in\\\" = \\\"1/2 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-3in-tape_0.5x3in\\\" = \\\"1/2 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_multipurpose-label_2x2.3125in\\\" = \\\"2 x 2-5/16\u02ba Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_name-badge-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.oe_price-tag-label_0.9375x0.875in\\\" = \\\"15/16 x 7/8\u02ba Etiqueta de precio\\\";\\n\"\n\"\\\"media.oe_return-address-label_0.75x2in\\\" = \\\"3/4 x 2\u02ba Etiqueta de direcci\u00f3n del remitente\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.125x4in\\\" = \\\"2-1/8 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.3125x4in\\\" = \\\"2-5/16 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_sm-multipurpose-label_1x2.125in\\\" = \\\"1 x 2-1/8\u02ba Etiqueta multiusos peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_square-multipurpose-label_1x1in\\\" = \\\"1\u02ba Etiqueta multiusos cuadrada\\\";\\n\"\n\"\\\"media.oe_thin-1in-tape_0.25x1in\\\" = \\\"1/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-2in-tape_0.25x2in\\\" = \\\"1/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-3in-tape_0.25x3in\\\" = \\\"1/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-multipurpose-label_0.375x2.8125in\\\" = \\\"3/8 x 2-13/16\u02ba Etiqueta delgada multiusos\\\";\\n\"\n\"\\\"media.oe_thinner-1in-tape_0.375x1in\\\" = \\\"3/8 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-2in-tape_0.375x2in\\\" = \\\"3/8 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-3in-tape_0.375x3in\\\" = \\\"3/8 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_video-spine-label_0.75x5.875in\\\" = \\\"3/4 x 5-7/8\u02ba Etiqueta del lomo del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_video-top-label_1.8x3.1in\\\" = \\\"1.8 x 3.1\u02ba Etiqueta superior del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_wide-1in-tape_1x1in\\\" = \\\"1 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-2in-tape_1x2in\\\" = \\\"1 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-3in-tape_1x3in\\\" = \\\"1 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-1in-tape_0.75x1in\\\" = \\\"3/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-2in-tape_0.75x2in\\\" = \\\"3/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-3in-tape_0.75x3in\\\" = \\\"3/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.om_35mm-slide_9x37mm\\\" = \\\"35mm Etiqueta de diapositiva\\\";\\n\"\n\"\\\"media.om_4-part-label_48x96mm\\\" = \\\"48 x 96mm Etiqueta de 4 partes\\\";\\n\"\n\"\\\"media.om_8mm-spine_9x66mm\\\" = \\\"8mm Etiqueta del lomo\\\";\\n\"\n\"\\\"media.om_address-large_35x83mm\\\" = \\\"35 x 83mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.om_address-small_24x83mm\\\" = \\\"24 x 83mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.om_cut-hanging-13_32x78mm\\\" = \\\"32 x 78mm 1/3 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_cut-hanging-15_32x40mm\\\" = \\\"32 x 40mm 1/5 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_diskette_48x64mm\\\" = \\\"48 x 64mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_diskette_54x70mm\\\" = \\\"54 x 70mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_euro-file-folder_39x49mm\\\" = \\\"39 x 49mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-narrow_38x186mm\\\" = \\\"38 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-wide_48x186mm\\\" = \\\"48 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-name-badge-large_48x79mm\\\" = \\\"48 x 79mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_euro-name-badge_38x67mm\\\" = \\\"38 x 67mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_file-folder_13x81mm\\\" = \\\"13 x 81mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_jewelry_27x48mm\\\" = \\\"27 x 48mm Etiqueta de joyer\u00eda\\\";\\n\"\n\"\\\"media.om_media-badge_48x64mm\\\" = \\\"48 x 64mm Etiqueta de insignia de medios\\\";\\n\"\n\"\\\"media.om_multi-purpose_24x44mm\\\" = \\\"24 x 44mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.om_retail-label_32x37mm\\\" = \\\"32 x 37mm Etiqueta minorista\\\";\\n\"\n\"\\\"media.om_return_16x43mm\\\" = \\\"16 x 43mm Etiqueta de devoluci\u00f3n\\\";\\n\"\n\"\\\"media.om_round_22x24mm\\\" = \\\"22mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.om_shipping_48x96mm\\\" = \\\"48 x 96mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.om_top-coated-paper_48x140mm\\\" = \\\"48 x 140mm Papel estucado superior\\\";\\n\"\n\"\\\"media.om_vhs-face_45x72mm\\\" = \\\"45 x 72mm Etiqueta de cara VHS\\\";\\n\"\n\"\\\"media.om_vhs-spine_18x141mm\\\" = \\\"18 x 141mm Etiqueta de lomo VHS\\\";\\n\"\n\"\\\"media.om_zip-disk_48x55mm\\\" = \\\"48 x 55mm Etiqueta de disco zip\\\";\\n\"\n\"\\\"New Custom Size\\\" = \\\"Nuevo tama\u00f1o personalizado\\\";\\n\"\n;\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 3,
+    "end_line": 148,
+    "code": "\"\\\"media.na_index-3x5_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.na_index-4x6_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x0.25-label_1.25x0.25in\\\" = \\\"1-1/4 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.25x2.25-label_1.25x2.25in\\\" = \\\"1-1/4 x 2-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.25-label_1.5x0.25in\\\" = \\\"1-1/2 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x0.5-label_1.5x0.5in\\\" = \\\"1-1/2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x1-label_1.5x1in\\\" = \\\"1-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_1.5x2-label_1.5x2in\\\" = \\\"1-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2-part-internet-postage-label_2.25x7.5in\\\" = \\\"2-1/4 x 7-1/2\u02ba Etiqueta de env\u00edo de Internet de 2 partes\\\";\\n\"\n\"\\\"media.oe_2-up-address-label_2.25x3.5in\\\" = \\\"2-1/4 x 3-1/2\u02ba Etiqueta de direcci\u00f3n 2-up\\\";\\n\"\n\"\\\"media.oe_2-up-file-folder-label_1.125x3.4375in\\\" = \\\"1-1/8 x 4-7/16\u02ba Etiqueta de carpeta de archivos 2-up\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25x0.5in\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x0.5-label_2.25xin\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25x1.25in\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x1.25-label_2.25xin\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x4-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x5.5-label_2.25x5.5in\\\" = \\\"2-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.38x5.5-label_2.38x5.5in\\\" = \\\"2-3/8 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x1-label_2.5x1in\\\" = \\\"2-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x2-label_2.5x2in\\\" = \\\"2-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.75x1.25-label_2.75x1.25in\\\" = \\\"2-3/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.9x1-label_2.9x1in\\\" = \\\"2.9 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.37-label_2x0.37in\\\" = \\\"2 x 0.37\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.5-label_2x0.5in\\\" = \\\"2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1-label_2x1in\\\" = \\\"2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1.25-label_2x1.25in\\\" = \\\"2 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x2-label_2x2in\\\" = \\\"2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x3-label_2x3in\\\" = \\\"2 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x4-label_2x4in\\\" = \\\"2 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x5.5-label_2x5.5in\\\" = \\\"2 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3-part-postage-label_2.25x7in\\\" = \\\"2-1/4 x 7\u02ba Etiqueta de env\u00edo de 3 partes\\\";\\n\"\n\"\\\"media.oe_3.25x2-label_3.25x2in\\\" = \\\"3-1/4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5-label_3.25x5in\\\" = \\\"3-1/4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.5-label_3.25x5.5in\\\" = \\\"3-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.83-label_3.25x5.83in\\\" = \\\"3-1/4 x 5-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x7.83-label_3.25x7.83in\\\" = \\\"3-1/4 x 7-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.5x1-label_3.5x1in\\\" = \\\"3-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_30859-paint-can-label_2.25x3.125in\\\" = \\\"2-1/4 x 3-1/8\u02ba Etiqueta de lata de pintura\\\";\\n\"\n\"\\\"media.oe_3x1-label_3x1in\\\" = \\\"3 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x1.25-label_3x1.25in\\\" = \\\"3 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x2-label_3x2in\\\" = \\\"3 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x3-label_3x3in\\\" = \\\"3 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x5-label_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x1-label_4x1in\\\" = \\\"4 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x13-label_4x13in\\\" = \\\"4 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x2-label_4x2in\\\" = \\\"4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x3-label_4x3in\\\" = \\\"4 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x4-label_4x4in\\\" = \\\"4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x5-label_4x5in\\\" = \\\"4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6-label_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x6.5-label_4x6.5in\\\" = \\\"4 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x7.83-label_4x7.83in\\\" = \\\"4 x 7-13/16 Etiqueta\\\";\\n\"\n\"\\\"media.oe_4x8-label_4x8in\\\" = \\\"4 x 8\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x1-label_6x1in\\\" = \\\"6 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x13-label_6x13in\\\" = \\\"6 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x2-label_6x2in\\\" = \\\"6 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x3-label_6x3in\\\" = \\\"6 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x4-label_6x4in\\\" = \\\"6 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x5-label_6x5in\\\" = \\\"6 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6-label_6x6in\\\" = \\\"6 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_6x6.5-label_6x6.5in\\\" = \\\"6 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x1-label_8x1in\\\" = \\\"8 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x13-label_8x13in\\\" = \\\"8 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x2-label_8x2in\\\" = \\\"8 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x3-label_8x3in\\\" = \\\"8 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x4-label_8x4in\\\" = \\\"8 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x5-label_8x5in\\\" = \\\"8 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6-label_8x6in\\\" = \\\"8 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_8x6.5-label_8x6.5in\\\" = \\\"8 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_address-label_1.125x3.5in\\\" = \\\"1-1/8 x 3-1/2\u02ba Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_barcode-label_0.75x2.5in\\\" = \\\"3/4 x 2-1/2\u02ba Etiqueta de c\u00f3digo de barras\\\";\\n\"\n\"\\\"media.oe_book-spine-label_1x1.5in\\\" = \\\"1 x 1-1/2\u02ba Etiqueta del lomo del libro\\\";\\n\"\n\"\\\"media.oe_continuous-label_2.125x3600in\\\" = \\\"2-1/8\u02ba Etiqueta continua\\\";\\n\"\n\"\\\"media.oe_dk1201-address_1.1x3.5in\\\" = \\\"DK1201 28 x 89mm Etiqueta de direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_dk1202-shipping_2.4x3.9in\\\" = \\\"DK1202 61 x 99mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_dk1203-file-folder_0.66x3.4in\\\" = \\\"DK1203 17 x 86mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_dk1204-multi-purpose_0.66x2.1in\\\" = \\\"DK1204 17 x 53mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_dk1207-cd-dvd_2.2x2.2in\\\" = \\\"DK1207 56mm Etiqueta de CD/DVD\\\";\\n\"\n\"\\\"media.oe_dk1208-large-address_1.4x3.5in\\\" = \\\"DK1208 36 x 89mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_dk1209-small-address_1.1x2.4in\\\" = \\\"DK1209 28 x 61mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_dk1219-round_0.47x0.47in\\\" = \\\"DK1219 12mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.oe_dk1240-large-multi-purpose_1.9x4in\\\" = \\\"DK1240 48 x 102mm Etiqueta multiusos grande\\\";\\n\"\n\"\\\"media.oe_file-folder-label_0.5625x3.4375in\\\" = \\\"9/16 x 3-7/16\u02ba Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.oe_hanging-file-tab-insert_0.5625x2in\\\" = \\\"9/16 x 2\u02ba Etiqueta de inserci\u00f3n de pesta\u00f1a de archivo colgante\\\";\\n\"\n\"\\\"media.oe_internet-postage-confirmation-label_2.3125x10.5in\\\" = \\\"2-5/16 x 10-1/2\u02ba Etiqueta de confirmaci\u00f3n de env\u00edo por Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_1.25x1.625in\\\" = \\\"1-1/4 x 1-5/8\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_2.3125x7in\\\" = \\\"2-3/8 x 7\u02ba Etiqueta de env\u00edo de Internet\\\";\\n\"\n\"\\\"media.oe_lg-address-label_1.4x3.5in\\\" = \\\"1-4/10 x 3-1/2\u02ba Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_lg-multipurpose-label_2.125x.75in\\\" = \\\"2-1/8 x 3/4\u02ba Large Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_library-barcode-label_0.5x1.875in\\\" = \\\"1/2 x 1-7/8\u02ba Library Barcode Etiqueta\\\";\\n\"\n\"\\\"media.oe_md-appointment-card_2x3.5in\\\" = \\\"2 x 3-1/2\u02ba Tarjeta de Cita Mediana\\\";\\n\"\n\"\\\"media.oe_md-multipurpose-label_2.25x1.25in\\\" = \\\"2-1/4 x 1/1/4\u02ba Etiqueta multiusos mediana\\\";\\n\"\n\"\\\"media.oe_media-label_2.25x2.25in\\\" = \\\"2-1/4 x 2-1/4\u02ba Etiqueta de medios\\\";\\n\"\n\"\\\"media.oe_medium-1in-tape_0.5x1in\\\" = \\\"1/2 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-2in-tape_0.5x2in\\\" = \\\"1/2 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-3in-tape_0.5x3in\\\" = \\\"1/2 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_multipurpose-label_2x2.3125in\\\" = \\\"2 x 2-5/16\u02ba Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_name-badge-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.oe_price-tag-label_0.9375x0.875in\\\" = \\\"15/16 x 7/8\u02ba Etiqueta de precio\\\";\\n\"\n\"\\\"media.oe_return-address-label_0.75x2in\\\" = \\\"3/4 x 2\u02ba Etiqueta de direcci\u00f3n del remitente\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.125x4in\\\" = \\\"2-1/8 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.3125x4in\\\" = \\\"2-5/16 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_sm-multipurpose-label_1x2.125in\\\" = \\\"1 x 2-1/8\u02ba Etiqueta multiusos peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_square-multipurpose-label_1x1in\\\" = \\\"1\u02ba Etiqueta multiusos cuadrada\\\";\\n\"\n\"\\\"media.oe_thin-1in-tape_0.25x1in\\\" = \\\"1/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-2in-tape_0.25x2in\\\" = \\\"1/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-3in-tape_0.25x3in\\\" = \\\"1/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-multipurpose-label_0.375x2.8125in\\\" = \\\"3/8 x 2-13/16\u02ba Etiqueta delgada multiusos\\\";\\n\"\n\"\\\"media.oe_thinner-1in-tape_0.375x1in\\\" = \\\"3/8 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-2in-tape_0.375x2in\\\" = \\\"3/8 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-3in-tape_0.375x3in\\\" = \\\"3/8 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_video-spine-label_0.75x5.875in\\\" = \\\"3/4 x 5-7/8\u02ba Etiqueta del lomo del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_video-top-label_1.8x3.1in\\\" = \\\"1.8 x 3.1\u02ba Etiqueta superior del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_wide-1in-tape_1x1in\\\" = \\\"1 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-2in-tape_1x2in\\\" = \\\"1 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-3in-tape_1x3in\\\" = \\\"1 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-1in-tape_0.75x1in\\\" = \\\"3/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-2in-tape_0.75x2in\\\" = \\\"3/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wider-3in-tape_0.75x3in\\\" = \\\"3/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.om_35mm-slide_9x37mm\\\" = \\\"35mm Etiqueta de diapositiva\\\";\\n\"\n\"\\\"media.om_4-part-label_48x96mm\\\" = \\\"48 x 96mm Etiqueta de 4 partes\\\";\\n\"\n\"\\\"media.om_8mm-spine_9x66mm\\\" = \\\"8mm Etiqueta del lomo\\\";\\n\"\n\"\\\"media.om_address-large_35x83mm\\\" = \\\"35 x 83mm Etiqueta de direcci\u00f3n grande\\\";\\n\"\n\"\\\"media.om_address-small_24x83mm\\\" = \\\"24 x 83mm Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.om_cut-hanging-13_32x78mm\\\" = \\\"32 x 78mm 1/3 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_cut-hanging-15_32x40mm\\\" = \\\"32 x 40mm 1/5 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_diskette_48x64mm\\\" = \\\"48 x 64mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_diskette_54x70mm\\\" = \\\"54 x 70mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_euro-file-folder_39x49mm\\\" = \\\"39 x 49mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-narrow_38x186mm\\\" = \\\"38 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-wide_48x186mm\\\" = \\\"48 x 186mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-name-badge-large_48x79mm\\\" = \\\"48 x 79mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_euro-name-badge_38x67mm\\\" = \\\"38 x 67mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_file-folder_13x81mm\\\" = \\\"13 x 81mm Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_jewelry_27x48mm\\\" = \\\"27 x 48mm Etiqueta de joyer\u00eda\\\";\\n\"\n\"\\\"media.om_media-badge_48x64mm\\\" = \\\"48 x 64mm Etiqueta de insignia de medios\\\";\\n\"\n\"\\\"media.om_multi-purpose_24x44mm\\\" = \\\"24 x 44mm Etiqueta multiusos\\\";\\n\"\n\"\\\"media.om_retail-label_32x37mm\\\" = \\\"32 x 37mm Etiqueta minorista\\\";\\n\"\n\"\\\"media.om_return_16x43mm\\\" = \\\"16 x 43mm Etiqueta de devoluci\u00f3n\\\";\\n\"\n\"\\\"media.om_round_22x24mm\\\" = \\\"22mm Etiqueta redonda\\\";\\n\"\n\"\\\"media.om_shipping_48x96mm\\\" = \\\"48 x 96mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.om_top-coated-paper_48x140mm\\\" = \\\"48 x 140mm Papel estucado superior\\\";\\n\"\n\"\\\"media.om_vhs-face_45x72mm\\\" = \\\"45 x 72mm Etiqueta de cara VHS\\\";\\n\"\n\"\\\"media.om_vhs-spine_18x141mm\\\" = \\\"18 x 141mm Etiqueta de lomo VHS\\\";\\n\"\n\"\\\"media.om_zip-disk_48x55mm\\\" = \\\"48 x 55mm Etiqueta de disco zip\\\";\\n\"\n\"\\\"New Custom Size\\\" = \\\"Nuevo tama\u00f1o personalizado\\\";\\n\"\n;\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 3,
+    "end_line": 3,
+    "code": "\"\\\"media.na_index-3x5_3x5in\\\" = \\\"3 x 5\u02ba Etiqueta\\\";\\n\"\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 4,
+    "end_line": 4,
+    "code": "\\\"media.na_index-4x6_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\";\\n\"\n\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 5,
+    "end_line": 5,
+    "code": "\"media.oe_1.25x0.25-label_1.25x0.25in\\\" = \\\"1-1/4 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 6,
+    "end_line": 6,
+    "code": "media.oe_1.25x2.25-label_1.25x2.25in\\\" = \\\"1-1/4 x 2-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 7,
+    "end_line": 7,
+    "code": "edia.oe_1.5x0.25-label_1.5x0.25in\\\" = \\\"1-1/2 x 1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"m",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 8,
+    "end_line": 8,
+    "code": "dia.oe_1.5x0.5-label_1.5x0.5in\\\" = \\\"1-1/2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"me",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 9,
+    "end_line": 9,
+    "code": "ia.oe_1.5x1-label_1.5x1in\\\" = \\\"1-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"med",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 10,
+    "end_line": 10,
+    "code": "a.oe_1.5x2-label_1.5x2in\\\" = \\\"1-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"medi",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 11,
+    "end_line": 11,
+    "code": ".oe_2-part-internet-postage-label_2.25x7.5in\\\" = \\\"2-1/4 x 7-1/2\u02ba Etiqueta de env\u00edo de Internet de 2 partes\\\";\\n\"\n\"\\\"media.",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 12,
+    "end_line": 12,
+    "code": "e_2-up-address-label_2.25x3.5in\\\" = \\\"2-1/4 x 3-1/2\u02ba Etiqueta de direcci\u00f3n 2-up\\\";\\n\"\n\"\\\"media.oe",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 13,
+    "end_line": 13,
+    "code": "2-up-file-folder-label_1.125x3.4375in\\\" = \\\"1-1/8 x 4-7/16\u02ba Etiqueta de carpeta de archivos 2-up\\\";\\n\"\n\"\\\"media.oe_",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 14,
+    "end_line": 14,
+    "code": ".25x0.5-label_2.25x0.5in\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 15,
+    "end_line": 15,
+    "code": "25x0.5-label_2.25xin\\\" = \\\"2-1/4 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 16,
+    "end_line": 16,
+    "code": "5x1.25-label_2.25x1.25in\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.2",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 17,
+    "end_line": 17,
+    "code": "x1.25-label_2.25xin\\\" = \\\"2-1/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 18,
+    "end_line": 18,
+    "code": "4-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.25x",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 19,
+    "end_line": 19,
+    "code": ".5-label_2.25x5.5in\\\" = \\\"2-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.38x5",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 20,
+    "end_line": 20,
+    "code": "5-label_2.38x5.5in\\\" = \\\"2-3/8 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x1-l",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 21,
+    "end_line": 21,
+    "code": "bel_2.5x1in\\\" = \\\"2-1/2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.5x2-la",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 22,
+    "end_line": 22,
+    "code": "el_2.5x2in\\\" = \\\"2-1/2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.75x1.25",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 23,
+    "end_line": 23,
+    "code": "label_2.75x1.25in\\\" = \\\"2-3/4 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2.9x1-labe",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 24,
+    "end_line": 24,
+    "code": "_2.9x1in\\\" = \\\"2.9 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.37-labe",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 25,
+    "end_line": 25,
+    "code": "_2x0.37in\\\" = \\\"2 x 0.37\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x0.5-label_",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 26,
+    "end_line": 26,
+    "code": "x0.5in\\\" = \\\"2 x 1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1-label_2x1",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 27,
+    "end_line": 27,
+    "code": "n\\\" = \\\"2 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x1.25-label_2",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 28,
+    "end_line": 28,
+    "code": "1.25in\\\" = \\\"2 x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x2-label_2x2in",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 29,
+    "end_line": 29,
+    "code": "\" = \\\"2 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x3-label_2x3in\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 30,
+    "end_line": 30,
+    "code": " = \\\"2 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x4-label_2x4in\\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 31,
+    "end_line": 31,
+    "code": "= \\\"2 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_2x5.5-label_2x5.5i",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 32,
+    "end_line": 32,
+    "code": "\\\" = \\\"2 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3-part-postage-labe",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 33,
+    "end_line": 33,
+    "code": "_2.25x7in\\\" = \\\"2-1/4 x 7\u02ba Etiqueta de env\u00edo de 3 partes\\\";\\n\"\n\"\\\"media.oe_3.25x2-label_3.25x2in",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 34,
+    "end_line": 34,
+    "code": "\" = \\\"3-1/4 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5-label_3.25x5in\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 35,
+    "end_line": 35,
+    "code": " = \\\"3-1/4 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.5-label_3.25x5.5",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 36,
+    "end_line": 36,
+    "code": "n\\\" = \\\"3-1/4 x 5-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x5.83-label_3.25x5.8",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 37,
+    "end_line": 37,
+    "code": "in\\\" = \\\"3-1/4 x 5-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.25x7.83-label_3.25x7.83",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 38,
+    "end_line": 38,
+    "code": "n\\\" = \\\"3-1/4 x 7-13/16\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3.5x1-label_3.5x1in\\\" = \\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 40,
+    "end_line": 40,
+    "code": ".125in\\\" = \\\"2-1/4 x 3-1/8\u02ba Etiqueta de lata de pintura\\\";\\n\"\n\"\\\"media.oe_3x1-label_3x1in\\\" = \\\"3 x 1\u02ba",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 40,
+    "end_line": 40,
+    "code": "ra\\\";\\n\"\n\"\\\"media.oe_3x1-label_3x1in\\\" = \\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 41,
+    "end_line": 41,
+    "code": "Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x1.25-label_3x1.25in\\\" = \\\"3",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 42,
+    "end_line": 42,
+    "code": "x 1-1/4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_3x2-label_3x2in\\\" = \\\"3 x 2\u02ba E",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 43,
+    "end_line": 43,
+    "code": "iqueta\\\";\\n\"\n\"\\\"media.oe_3x3-label_3x3in\\\" = \\\"3 x 3\u02ba Et",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 44,
+    "end_line": 44,
+    "code": "queta\\\";\\n\"\n\"\\\"media.oe_3x5-label_3x5in\\\" = \\\"3 x 5\u02ba Eti",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 45,
+    "end_line": 45,
+    "code": "ueta\\\";\\n\"\n\"\\\"media.oe_4x1-label_4x1in\\\" = \\\"4 x 1\u02ba Etiq",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 46,
+    "end_line": 46,
+    "code": "eta\\\";\\n\"\n\"\\\"media.oe_4x13-label_4x13in\\\" = \\\"4 x 13\u02ba Et",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 47,
+    "end_line": 47,
+    "code": "queta\\\";\\n\"\n\"\\\"media.oe_4x2-label_4x2in\\\" = \\\"4 x 2\u02ba Etique",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 48,
+    "end_line": 48,
+    "code": "a\\\";\\n\"\n\"\\\"media.oe_4x3-label_4x3in\\\" = \\\"4 x 3\u02ba Etiquet",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 49,
+    "end_line": 49,
+    "code": "\\\";\\n\"\n\"\\\"media.oe_4x4-label_4x4in\\\" = \\\"4 x 4\u02ba Etiqueta",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 50,
+    "end_line": 50,
+    "code": "\";\\n\"\n\"\\\"media.oe_4x5-label_4x5in\\\" = \\\"4 x 5\u02ba Etiqueta\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 51,
+    "end_line": 51,
+    "code": ";\\n\"\n\"\\\"media.oe_4x6-label_4x6in\\\" = \\\"4 x 6\u02ba Etiqueta\\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 53,
+    "end_line": 53,
+    "code": "ueta\\\";\\n\"\n\"\\\"media.oe_4x7.83-label_4x7.83in\\\" = \\\"4 x 7-13/16 E",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 54,
+    "end_line": 54,
+    "code": "iqueta\\\";\\n\"\n\"\\\"media.oe_4x8-label_4x8in\\\" = \\\"4 x 8\u02ba Etiqueta\\\";\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 55,
+    "end_line": 55,
+    "code": "\"\n\"\\\"media.oe_6x1-label_6x1in\\\" = \\\"6 x 1\u02ba Etiqueta\\\";\\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 56,
+    "end_line": 56,
+    "code": "\n\"\\\"media.oe_6x13-label_6x13in\\\" = \\\"6 x 13\u02ba Etiqueta\\\";",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 57,
+    "end_line": 57,
+    "code": "n\"\n\"\\\"media.oe_6x2-label_6x2in\\\" = \\\"6 x 2\u02ba Etiqueta\\\";\\n\"\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 58,
+    "end_line": 58,
+    "code": "\\\"media.oe_6x3-label_6x3in\\\" = \\\"6 x 3\u02ba Etiqueta\\\";\\n\"\n\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 59,
+    "end_line": 59,
+    "code": "\"media.oe_6x4-label_6x4in\\\" = \\\"6 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 60,
+    "end_line": 60,
+    "code": "media.oe_6x5-label_6x5in\\\" = \\\"6 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 61,
+    "end_line": 61,
+    "code": "edia.oe_6x6-label_6x6in\\\" = \\\"6 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"m",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 62,
+    "end_line": 62,
+    "code": "dia.oe_6x6.5-label_6x6.5in\\\" = \\\"6 x 6-1/2\u02ba Etiqueta\\\";\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 63,
+    "end_line": 63,
+    "code": "\"\n\"\\\"media.oe_8x1-label_8x1in\\\" = \\\"8 x 1\u02ba Etiqueta\\\";\\n\"\n\"\\\"med",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 64,
+    "end_line": 64,
+    "code": "a.oe_8x13-label_8x13in\\\" = \\\"8 x 13\u02ba Etiqueta\\\";\\n\"\n\"\\\"m",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 65,
+    "end_line": 65,
+    "code": "dia.oe_8x2-label_8x2in\\\" = \\\"8 x 2\u02ba Etiqueta\\\";\\n\"\n\"\\\"media",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 66,
+    "end_line": 66,
+    "code": "oe_8x3-label_8x3in\\\" = \\\"8 x 3\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 67,
+    "end_line": 67,
+    "code": "e_8x4-label_8x4in\\\" = \\\"8 x 4\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.o",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 68,
+    "end_line": 68,
+    "code": "_8x5-label_8x5in\\\" = \\\"8 x 5\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 69,
+    "end_line": 69,
+    "code": "8x6-label_8x6in\\\" = \\\"8 x 6\u02ba Etiqueta\\\";\\n\"\n\"\\\"media.oe_",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 70,
+    "end_line": 70,
+    "code": "x6.5-label_8x6.5in\\\" = \\\"8 x 6-1/2\u02ba Etiqueta\\\";\\n\"\n\"\\\"me",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 72,
+    "end_line": 72,
+    "code": "direcci\u00f3n\\\";\\n\"\n\"\\\"media.oe_barcode-label_0.75x2.5in\\\" = \\\"3/4 x 2-1/2\u02ba Etiqueta de c\u00f3di",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 73,
+    "end_line": 73,
+    "code": "o de barras\\\";\\n\"\n\"\\\"media.oe_book-spine-label_1x1.5in\\\" = \\\"1 x 1-1/2\u02ba Etiqueta del lomo de",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 74,
+    "end_line": 74,
+    "code": " libro\\\";\\n\"\n\"\\\"media.oe_continuous-label_2.125x3600in\\\" = \\\"2-1/8\u02ba Etiqueta continua\\\";",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 76,
+    "end_line": 76,
+    "code": "ci\u00f3n\\\";\\n\"\n\"\\\"media.oe_dk1202-shipping_2.4x3.9in\\\" = \\\"DK1202 61 x 99mm Etiqueta de env\u00ed",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 77,
+    "end_line": 77,
+    "code": "\\\";\\n\"\n\"\\\"media.oe_dk1203-file-folder_0.66x3.4in\\\" = \\\"DK1203 17 x 86mm Etiqueta de c",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 78,
+    "end_line": 78,
+    "code": "rpeta de archivos\\\";\\n\"\n\"\\\"media.oe_dk1204-multi-purpose_0.66x2.1in\\\" = \\\"DK1204 17 x 53mm Etiqueta mu",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 79,
+    "end_line": 79,
+    "code": "tiusos\\\";\\n\"\n\"\\\"media.oe_dk1207-cd-dvd_2.2x2.2in\\\" = \\\"DK1207 56mm Etiqueta de CD/DVD\\\";\\n\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 81,
+    "end_line": 81,
+    "code": "irecci\u00f3n grande\\\";\\n\"\n\"\\\"media.oe_dk1209-small-address_1.1x2.4in\\\" = \\\"DK1209 28 x 61mm Etiqueta de d",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 82,
+    "end_line": 82,
+    "code": "recci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_dk1219-round_0.47x0.47in\\\" = \\\"DK1219 12mm Etiqueta redonda\\\";\\n\"\n\"\\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 82,
+    "end_line": 82,
+    "code": "47x0.47in\\\" = \\\"DK1219 12mm Etiqueta redonda\\\";\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 84,
+    "end_line": 84,
+    "code": "ltiusos grande\\\";\\n\"\n\"\\\"media.oe_file-folder-label_0.5625x3.4375in\\\" = \\\"9/16 x 3-7/16\u02ba Etiqueta de ca",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 85,
+    "end_line": 85,
+    "code": "peta de archivos\\\";\\n\"\n\"\\\"media.oe_hanging-file-tab-insert_0.5625x2in\\\" = \\\"9/16 x 2\u02ba Etiqueta de inserci",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 86,
+    "end_line": 86,
+    "code": "n de pesta\u00f1a de archivo colgante\\\";\\n\"\n\"\\\"media.oe_internet-postage-confirmation-label_2.3125x10.5in\\\" = \\\"2-5/16 x 10-1/2\u02ba ",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 87,
+    "end_line": 87,
+    "code": "tiqueta de confirmaci\u00f3n de env\u00edo por Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_1.25x1.625in\\\" = \\\"1-1/4 x 1-5/8\u02ba Etiqueta de env\u00edo d",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 88,
+    "end_line": 88,
+    "code": " Internet\\\";\\n\"\n\"\\\"media.oe_internet-postage-label_2.3125x7in\\\" = \\\"2-3/8 x 7\u02ba Etiqueta de env\u00edo de Intern",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 89,
+    "end_line": 89,
+    "code": "t\\\";\\n\"\n\"\\\"media.oe_lg-address-label_1.4x3.5in\\\" = \\\"1-4/10 x 3-1/2\u02ba Etiqueta de direcci\u00f3n grande\\\";",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 90,
+    "end_line": 90,
+    "code": "n\"\n\"\\\"media.oe_lg-multipurpose-label_2.125x.75in\\\" = \\\"2-1/8 x 3/4\u02ba Large Etiqueta multiusos\\\";\\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 91,
+    "end_line": 91,
+    "code": "\n\"\\\"media.oe_library-barcode-label_0.5x1.875in\\\" = \\\"1/2 x 1-7/8\u02ba Library Barcode Etiqueta\\\";\\n\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 92,
+    "end_line": 92,
+    "code": "\"\\\"media.oe_md-appointment-card_2x3.5in\\\" = \\\"2 x 3-1/2\u02ba Tarjeta de Cita Mediana\\\";\\n\"\n\"\\\"media.",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 93,
+    "end_line": 93,
+    "code": "e_md-multipurpose-label_2.25x1.25in\\\" = \\\"2-1/4 x 1/1/4\u02ba Etiqueta multiusos mediana\\\";\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 94,
+    "end_line": 94,
+    "code": "\"\n\"\\\"media.oe_media-label_2.25x2.25in\\\" = \\\"2-1/4 x 2-1/4\u02ba Etiqueta de medios\\\";\\n\"\n\"\\\"media.oe_medi",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 95,
+    "end_line": 95,
+    "code": "m-1in-tape_0.5x1in\\\" = \\\"1/2 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-2in-tape_0.5x2in\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 96,
+    "end_line": 96,
+    "code": " = \\\"1/2 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_medium-3in-tape_0.5x3in\\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 97,
+    "end_line": 97,
+    "code": "= \\\"1/2 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_multipurpose-label_2x2.312",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 98,
+    "end_line": 98,
+    "code": "in\\\" = \\\"2 x 2-5/16\u02ba Etiqueta multiusos\\\";\\n\"\n\"\\\"media.oe_name-",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 99,
+    "end_line": 99,
+    "code": "adge-label_2.25x4in\\\" = \\\"2-1/4 x 4\u02ba Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.oe_pri",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 100,
+    "end_line": 100,
+    "code": "e-tag-label_0.9375x0.875in\\\" = \\\"15/16 x 7/8\u02ba Etiqueta de precio\\\";\\n\"\n\"\\\"media.oe_return",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 101,
+    "end_line": 101,
+    "code": "address-label_0.75x2in\\\" = \\\"3/4 x 2\u02ba Etiqueta de direcci\u00f3n del remitente\\\";\\n\"\n\"\\\"medi",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 102,
+    "end_line": 102,
+    "code": ".oe_shipping-label_2.125x4in\\\" = \\\"2-1/8 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_shipping-label_2.3",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 103,
+    "end_line": 103,
+    "code": "25x4in\\\" = \\\"2-5/16 x 4\u02ba Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.oe_sm-multipurpose-la",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 104,
+    "end_line": 104,
+    "code": "el_1x2.125in\\\" = \\\"1 x 2-1/8\u02ba Etiqueta multiusos peque\u00f1a\\\";\\n\"\n\"\\\"media.oe_square",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 105,
+    "end_line": 105,
+    "code": "multipurpose-label_1x1in\\\" = \\\"1\u02ba Etiqueta multiusos cuadrada\\\";\\n\"\n\"\\\"media.oe_thin-1in-tape_0",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 106,
+    "end_line": 106,
+    "code": "25x1in\\\" = \\\"1/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thin-2in-tape_0.25x2in\\\" = \\\"1/4 x 2\u02ba Cin",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 106,
+    "end_line": 106,
+    "code": "1in\\\" = \\\"1/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 107,
+    "end_line": 107,
+    "code": "a\\\";\\n\"\n\"\\\"media.oe_thin-3in-tape_0.25x3in\\\" = \\\"1/4 x 3\u02ba Cint",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 108,
+    "end_line": 108,
+    "code": "\\\";\\n\"\n\"\\\"media.oe_thin-multipurpose-label_0.375x2.8125in\\\" = ",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 110,
+    "end_line": 110,
+    "code": "inner-1in-tape_0.375x1in\\\" = \\\"3/8 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-2in-tape_0.375x2in\\\" = \\\"3/8 x 2\u02ba",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 110,
+    "end_line": 110,
+    "code": "er-1in-tape_0.375x1in\\\" = \\\"3/8 x 1\u02ba Cinta\\\";\\n",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 111,
+    "end_line": 111,
+    "code": "Cinta\\\";\\n\"\n\"\\\"media.oe_thinner-3in-tape_0.375x3in\\\" = \\\"3/8 x 3\u02ba ",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 112,
+    "end_line": 112,
+    "code": "inta\\\";\\n\"\n\"\\\"media.oe_video-spine-label_0.75x5.875in\\\" = \\\"3/4 x ",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 114,
+    "end_line": 114,
+    "code": "_1.8x3.1in\\\" = \\\"1.8 x 3.1\u02ba Etiqueta superior del v\u00eddeo\\\";\\n\"\n\"\\\"media.oe_wide-1in-tape_1x1in\\\" =",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 115,
+    "end_line": 115,
+    "code": "\\\"1 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_wide-2in-tape_1x2in\\\" = \\\"1 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 116,
+    "end_line": 116,
+    "code": "ide-3in-tape_1x3in\\\" = \\\"1 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"media.oe_w",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 117,
+    "end_line": 117,
+    "code": "der-1in-tape_0.75x1in\\\" = \\\"3/4 x 1\u02ba Cinta\\\";\\n\"\n\"\\\"media",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 118,
+    "end_line": 118,
+    "code": "oe_wider-2in-tape_0.75x2in\\\" = \\\"3/4 x 2\u02ba Cinta\\\";\\n\"\n\"\\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 119,
+    "end_line": 119,
+    "code": "edia.oe_wider-3in-tape_0.75x3in\\\" = \\\"3/4 x 3\u02ba Cinta\\\";\\n\"\n\"\\\"m",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 120,
+    "end_line": 120,
+    "code": "dia.om_35mm-slide_9x37mm\\\" = \\\"35mm Etiqueta de diapositiva\\\";\\",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 122,
+    "end_line": 122,
+    "code": " partes\\\";\\n\"\n\"\\\"media.om_8mm-spine_9x66mm\\\" = \\\"8mm Etiqueta del lomo",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 123,
+    "end_line": 123,
+    "code": "\";\\n\"\n\"\\\"media.om_address-large_35x83mm\\\" = \\\"35 x 83mm Etiqueta de direcci",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 124,
+    "end_line": 124,
+    "code": "n grande\\\";\\n\"\n\"\\\"media.om_address-small_24x83mm\\\" = \\\"24 x 83",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 125,
+    "end_line": 125,
+    "code": "m Etiqueta de direcci\u00f3n peque\u00f1a\\\";\\n\"\n\"\\\"media.om_cut-hanging-13_32x78mm\\\" = \\\"32 x 7",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 127,
+    "end_line": 127,
+    "code": "0mm\\\" = \\\"32 x 40mm 1/5 Cut Hanging Etiqueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_diskette_48x64mm\\\"",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 128,
+    "end_line": 128,
+    "code": "= \\\"48 x 64mm Etiqueta de disquete\\\";\\n\"\n\"\\\"media.om_diskette_54x70mm\\\" = \\\"54 x 70mm Etiqueta de disque",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 129,
+    "end_line": 129,
+    "code": "e\\\";\\n\"\n\"\\\"media.om_euro-file-folder_39x49mm\\\" = \\\"39 x 49mm Etiqueta d",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 130,
+    "end_line": 130,
+    "code": " carpeta de archivos\\\";\\n\"\n\"\\\"media.om_euro-folder-narrow_38x186mm\\\" = ",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 133,
+    "end_line": 133,
+    "code": " = \\\"48 x 79mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_euro-name-badge_38x67mm\\\" = \\\"38",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 134,
+    "end_line": 134,
+    "code": "x 67mm Etiqueta de identificaci\u00f3n\\\";\\n\"\n\"\\\"media.om_file-folder_13x81mm\\\" = \\\"13 x 81mm Eti",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 135,
+    "end_line": 135,
+    "code": "ueta de carpeta de archivos\\\";\\n\"\n\"\\\"media.om_jewelry_27x48mm\\\" = \\\"27 x 48mm Etiquet",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 136,
+    "end_line": 136,
+    "code": " de joyer\u00eda\\\";\\n\"\n\"\\\"media.om_media-badge_48x64mm\\\" = \\\"48 x 64mm Etiqueta de insigni",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 137,
+    "end_line": 137,
+    "code": " de medios\\\";\\n\"\n\"\\\"media.om_multi-purpose_24x44mm\\\" = \\\"24 x 44mm Eti",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 138,
+    "end_line": 138,
+    "code": "ueta multiusos\\\";\\n\"\n\"\\\"media.om_retail-label_32x37mm\\\" = \\\"32 x 37mm Etiqueta minor",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 139,
+    "end_line": 139,
+    "code": "sta\\\";\\n\"\n\"\\\"media.om_return_16x43mm\\\" = \\\"16 x 43mm Etiqueta de devoluci\u00f3",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 140,
+    "end_line": 140,
+    "code": "\\\";\\n\"\n\"\\\"media.om_round_22x24mm\\\" = \\\"22mm Etiqueta redonda\\\";\\n\"\n\"\\\"med",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 141,
+    "end_line": 141,
+    "code": "a.om_shipping_48x96mm\\\" = \\\"48 x 96mm Etiqueta de env\u00edo\\\";\\n\"\n\"\\\"media.o",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 143,
+    "end_line": 143,
+    "code": "uperior\\\";\\n\"\n\"\\\"media.om_vhs-face_45x72mm\\\" = \\\"45 x 72mm Etiqueta d",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 144,
+    "end_line": 144,
+    "code": " cara VHS\\\";\\n\"\n\"\\\"media.om_vhs-spine_18x141mm\\\" = \\\"18 x 141mm Etiqueta de lomo VHS",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 145,
+    "end_line": 145,
+    "code": "\";\\n\"\n\"\\\"media.om_zip-disk_48x55mm\\\" = \\\"48 x 55mm Etiqueta de disco zi",
+    "file": "data/codebase/static-resources/lprint-es-strings.h"
+  }
+]

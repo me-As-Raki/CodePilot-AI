@@ -1,0 +1,35 @@
+# Ignore environment files
+.env
+*.env
+
+# Ignore Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore local editor and system files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Ignore local dev/testing scripts
+test_gemini.py
+test_retrevier.py
+
+# Ignore backend and frontend build/data folders (optional - comment out if you want them tracked)
+backend/
+frontend/
+
+# Ignore Tree-sitter tools
+tree-sitter-c/
+tree_sitter_grammars/
+tree-sitter.exe
+tree-parser.exe
+
+# Ignore large files / checkpoints (if applicable)
+*.exe
+*.ckpt
+*.bin
+*.log
+*.csv
+*.jsonl

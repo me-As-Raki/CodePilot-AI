@@ -1,0 +1,317 @@
+[
+  {
+    "type": "struct_assignment",
+    "start_line": 2,
+    "end_line": 70,
+    "code": "// coded.c - Complex C example for RAG testing\n\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_USERS 100\n#define APP_NAME \"CodedApp\"\n\ntypedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n    char name[50];\n    UserRole role;\n} User;\n\nstatic User user_db[MAX_USERS];\nstatic int user_count = 0;\n\n// Initialize the user database\nvoid init_users() {\n    user_count = 3;\n    user_db[0] = (User){1, \"Alice\", ROLE_ADMIN};\n    user_db[1] = (User){2, \"Bob\", ROLE_USER};\n    user_db[2] = (User){3, \"Charlie\", ROLE_GUEST};\n}\n\n// Find a user by name\nUser *find_user(const char *name) {\n    for (int i = 0; i < user_count; i++) {\n        if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];\n    }\n    return NULL;\n}\n\n// Promote a user to admin\nint promote_user(const char *name) {\n    User *u = find_user(name);\n    if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }\n    return 0;\n}\n\n// Print all users\nvoid list_users() {\n    printf(\"User List:\\n\");\n    for (int i = 0; i < user_count; i++) {\n        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n    }\n}\n\n// Entry point\nint main() {\n    init_users();\n    list_users();\n    promote_user(\"Bob\");\n    printf(\"\\nAfter Promotion:\\n\");\n    list_users();\n    return 0;\n}\n",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 2,
+    "end_line": 70,
+    "code": "// coded.c - Complex C example for RAG testing\n\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_USERS 100\n#define APP_NAME \"CodedApp\"\n\ntypedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n    char name[50];\n    UserRole role;\n} User;\n\nstatic User user_db[MAX_USERS];\nstatic int user_count = 0;\n\n// Initialize the user database\nvoid init_users() {\n    user_count = 3;\n    user_db[0] = (User){1, \"Alice\", ROLE_ADMIN};\n    user_db[1] = (User){2, \"Bob\", ROLE_USER};\n    user_db[2] = (User){3, \"Charlie\", ROLE_GUEST};\n}\n\n// Find a user by name\nUser *find_user(const char *name) {\n    for (int i = 0; i < user_count; i++) {\n        if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];\n    }\n    return NULL;\n}\n\n// Promote a user to admin\nint promote_user(const char *name) {\n    User *u = find_user(name);\n    if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }\n    return 0;\n}\n\n// Print all users\nvoid list_users() {\n    printf(\"User List:\\n\");\n    for (int i = 0; i < user_count; i++) {\n        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n    }\n}\n\n// Entry point\nint main() {\n    init_users();\n    list_users();\n    promote_user(\"Bob\");\n    printf(\"\\nAfter Promotion:\\n\");\n    list_users();\n    return 0;\n}\n",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "static_const_char_pointer_array",
+    "start_line": 2,
+    "end_line": 70,
+    "code": "// coded.c - Complex C example for RAG testing\n\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_USERS 100\n#define APP_NAME \"CodedApp\"\n\ntypedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n    char name[50];\n    UserRole role;\n} User;\n\nstatic User user_db[MAX_USERS];\nstatic int user_count = 0;\n\n// Initialize the user database\nvoid init_users() {\n    user_count = 3;\n    user_db[0] = (User){1, \"Alice\", ROLE_ADMIN};\n    user_db[1] = (User){2, \"Bob\", ROLE_USER};\n    user_db[2] = (User){3, \"Charlie\", ROLE_GUEST};\n}\n\n// Find a user by name\nUser *find_user(const char *name) {\n    for (int i = 0; i < user_count; i++) {\n        if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];\n    }\n    return NULL;\n}\n\n// Promote a user to admin\nint promote_user(const char *name) {\n    User *u = find_user(name);\n    if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }\n    return 0;\n}\n\n// Print all users\nvoid list_users() {\n    printf(\"User List:\\n\");\n    for (int i = 0; i < user_count; i++) {\n        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n    }\n}\n\n// Entry point\nint main() {\n    init_users();\n    list_users();\n    promote_user(\"Bob\");\n    printf(\"\\nAfter Promotion:\\n\");\n    list_users();\n    return 0;\n}\n",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "include",
+    "start_line": 4,
+    "end_line": 5,
+    "code": "#include <stdio.h>\n",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "include",
+    "start_line": 5,
+    "end_line": 6,
+    "code": "#include <stdlib.h>\n",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "include",
+    "start_line": 6,
+    "end_line": 7,
+    "code": "#include <string.h>\n",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "macro",
+    "start_line": 8,
+    "end_line": 9,
+    "code": "#define MAX_USERS 100\n",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "macro",
+    "start_line": 9,
+    "end_line": 10,
+    "code": "#define APP_NAME \"CodedApp\"\n",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "typedef",
+    "start_line": 11,
+    "end_line": 15,
+    "code": "typedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "enum",
+    "start_line": 11,
+    "end_line": 15,
+    "code": "enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "typedef",
+    "start_line": 17,
+    "end_line": 21,
+    "code": "typedef struct {\n    int id;\n    char name[50];\n    UserRole role;\n} User;",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct",
+    "start_line": 17,
+    "end_line": 21,
+    "code": "struct {\n    int id;\n    char name[50];\n    UserRole role;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 24,
+    "end_line": 24,
+    "code": "static int user_count = 0;",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function",
+    "start_line": 27,
+    "end_line": 32,
+    "code": "void init_users() {\n    user_count = 3;\n    user_db[0] = (User){1, \"Alice\", ROLE_ADMIN};\n    user_db[1] = (User){2, \"Bob\", ROLE_USER};\n    user_db[2] = (User){3, \"Charlie\", ROLE_GUEST};\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 29,
+    "end_line": 29,
+    "code": "(User){1, \"Alice\", ROLE_ADMIN}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 29,
+    "end_line": 29,
+    "code": "{1, \"Alice\", ROLE_ADMIN}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 30,
+    "end_line": 30,
+    "code": "(User){2, \"Bob\", ROLE_USER}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 30,
+    "end_line": 30,
+    "code": "{2, \"Bob\", ROLE_USER}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 31,
+    "end_line": 31,
+    "code": "(User){3, \"Charlie\", ROLE_GUEST}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 31,
+    "end_line": 31,
+    "code": "{3, \"Charlie\", ROLE_GUEST}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function",
+    "start_line": 35,
+    "end_line": 41,
+    "code": "User *find_user(const char *name) {\n    for (int i = 0; i < user_count; i++) {\n        if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];\n    }\n    return NULL;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 35,
+    "end_line": 41,
+    "code": "User *find_user(const char *name) {\n    for (int i = 0; i < user_count; i++) {\n        if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];\n    }\n    return NULL;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 35,
+    "end_line": 41,
+    "code": "{\n    for (int i = 0; i < user_count; i++) {\n        if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];\n    }\n    return NULL;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 36,
+    "end_line": 39,
+    "code": "for (int i = 0; i < user_count; i++) {\n        if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];\n    }",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 36,
+    "end_line": 36,
+    "code": "int i = 0;",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 36,
+    "end_line": 39,
+    "code": "{\n        if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];\n    }",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 37,
+    "end_line": 38,
+    "code": "if (strcmp(user_db[i].name, name) == 0)\n            return &user_db[i];",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function",
+    "start_line": 44,
+    "end_line": 51,
+    "code": "int promote_user(const char *name) {\n    User *u = find_user(name);\n    if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }\n    return 0;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 44,
+    "end_line": 51,
+    "code": "int promote_user(const char *name) {\n    User *u = find_user(name);\n    if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }\n    return 0;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 44,
+    "end_line": 51,
+    "code": "int promote_user(const char *name) {\n    User *u = find_user(name);\n    if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }\n    return 0;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 44,
+    "end_line": 51,
+    "code": "{\n    User *u = find_user(name);\n    if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }\n    return 0;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 44,
+    "end_line": 51,
+    "code": "{\n    User *u = find_user(name);\n    if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }\n    return 0;\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 45,
+    "end_line": 45,
+    "code": "User *u = find_user(name);",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 46,
+    "end_line": 49,
+    "code": "if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 46,
+    "end_line": 49,
+    "code": "if (u && u->role != ROLE_ADMIN) {\n        u->role = ROLE_ADMIN;\n        return 1;\n    }",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 46,
+    "end_line": 46,
+    "code": "(u && u->role != ROLE_ADMIN)",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 46,
+    "end_line": 49,
+    "code": "{\n        u->role = ROLE_ADMIN;\n        return 1;\n    }",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 47,
+    "end_line": 47,
+    "code": "u->role = ROLE_ADMIN;",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function",
+    "start_line": 54,
+    "end_line": 59,
+    "code": "void list_users() {\n    printf(\"User List:\\n\");\n    for (int i = 0; i < user_count; i++) {\n        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n    }\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 54,
+    "end_line": 59,
+    "code": "void list_users() {\n    printf(\"User List:\\n\");\n    for (int i = 0; i < user_count; i++) {\n        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n    }\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 54,
+    "end_line": 59,
+    "code": "{\n    printf(\"User List:\\n\");\n    for (int i = 0; i < user_count; i++) {\n        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n    }\n}",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 56,
+    "end_line": 58,
+    "code": "for (int i = 0; i < user_count; i++) {\n        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n    }",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 56,
+    "end_line": 56,
+    "code": "int i = 0;",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 56,
+    "end_line": 58,
+    "code": "{\n        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n    }",
+    "file": "data/codebase/coded (4).c"
+  },
+  {
+    "type": "function",
+    "start_line": 62,
+    "end_line": 69,
+    "code": "int main() {\n    init_users();\n    list_users();\n    promote_user(\"Bob\");\n    printf(\"\\nAfter Promotion:\\n\");\n    list_users();\n    return 0;\n}",
+    "file": "data/codebase/coded (4).c"
+  }
+]

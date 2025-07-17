@@ -1,0 +1,240 @@
+[
+  {
+    "type": "struct_assignment",
+    "start_line": 1,
+    "end_line": 67,
+    "code": "// complex_test.c\n\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_USERS 100\n#define LOG(msg) printf(\"[LOG] %s:%d - %s\\n\", __FILE__, __LINE__, msg)\n\ntypedef struct {\n    char name[50];\n    int age;\n    union {\n        float gpa;\n        int rank;\n    } performance;\n    enum { STUDENT, TEACHER } role;\n} Person;\n\nstatic const char *roles[] = { \"Student\", \"Teacher\" };\n\nstatic void print_person(const Person *p) {\n    printf(\"Name: %s\\n\", p->name);\n    printf(\"Age: %d\\n\", p->age);\n    printf(\"Role: %s\\n\", roles[p->role]);\n    if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);\n}\n\nint load_people(const char *filename, Person *people, int max) {\n    FILE *fp = fopen(filename, \"r\");\n    if (!fp) return -1;\n\n    int count = 0;\n    while (count < max && fscanf(fp, \"%49[^,],%d,%f,%d\\n\",\n           people[count].name,\n           &people[count].age,\n           &people[count].performance.gpa,\n           (int*)&people[count].role) == 4) {\n        count++;\n    }\n    fclose(fp);\n    return count;\n}\n\nint main(void) {\n    LOG(\"Program started\");\n\n    Person users[MAX_USERS];\n    int count = load_people(\"people.txt\", users, MAX_USERS);\n\n    if (count < 0) {\n        perror(\"Failed to load people\");\n        return 1;\n    }\n\n    for (int i = 0; i < count; i++) {\n        print_person(&users[i]);\n        printf(\"--------\\n\");\n    }\n\n    LOG(\"Program finished\");\n    return 0;\n}\n",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 1,
+    "end_line": 67,
+    "code": "// complex_test.c\n\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_USERS 100\n#define LOG(msg) printf(\"[LOG] %s:%d - %s\\n\", __FILE__, __LINE__, msg)\n\ntypedef struct {\n    char name[50];\n    int age;\n    union {\n        float gpa;\n        int rank;\n    } performance;\n    enum { STUDENT, TEACHER } role;\n} Person;\n\nstatic const char *roles[] = { \"Student\", \"Teacher\" };\n\nstatic void print_person(const Person *p) {\n    printf(\"Name: %s\\n\", p->name);\n    printf(\"Age: %d\\n\", p->age);\n    printf(\"Role: %s\\n\", roles[p->role]);\n    if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);\n}\n\nint load_people(const char *filename, Person *people, int max) {\n    FILE *fp = fopen(filename, \"r\");\n    if (!fp) return -1;\n\n    int count = 0;\n    while (count < max && fscanf(fp, \"%49[^,],%d,%f,%d\\n\",\n           people[count].name,\n           &people[count].age,\n           &people[count].performance.gpa,\n           (int*)&people[count].role) == 4) {\n        count++;\n    }\n    fclose(fp);\n    return count;\n}\n\nint main(void) {\n    LOG(\"Program started\");\n\n    Person users[MAX_USERS];\n    int count = load_people(\"people.txt\", users, MAX_USERS);\n\n    if (count < 0) {\n        perror(\"Failed to load people\");\n        return 1;\n    }\n\n    for (int i = 0; i < count; i++) {\n        print_person(&users[i]);\n        printf(\"--------\\n\");\n    }\n\n    LOG(\"Program finished\");\n    return 0;\n}\n",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "static_const_char_pointer_array",
+    "start_line": 1,
+    "end_line": 67,
+    "code": "// complex_test.c\n\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_USERS 100\n#define LOG(msg) printf(\"[LOG] %s:%d - %s\\n\", __FILE__, __LINE__, msg)\n\ntypedef struct {\n    char name[50];\n    int age;\n    union {\n        float gpa;\n        int rank;\n    } performance;\n    enum { STUDENT, TEACHER } role;\n} Person;\n\nstatic const char *roles[] = { \"Student\", \"Teacher\" };\n\nstatic void print_person(const Person *p) {\n    printf(\"Name: %s\\n\", p->name);\n    printf(\"Age: %d\\n\", p->age);\n    printf(\"Role: %s\\n\", roles[p->role]);\n    if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);\n}\n\nint load_people(const char *filename, Person *people, int max) {\n    FILE *fp = fopen(filename, \"r\");\n    if (!fp) return -1;\n\n    int count = 0;\n    while (count < max && fscanf(fp, \"%49[^,],%d,%f,%d\\n\",\n           people[count].name,\n           &people[count].age,\n           &people[count].performance.gpa,\n           (int*)&people[count].role) == 4) {\n        count++;\n    }\n    fclose(fp);\n    return count;\n}\n\nint main(void) {\n    LOG(\"Program started\");\n\n    Person users[MAX_USERS];\n    int count = load_people(\"people.txt\", users, MAX_USERS);\n\n    if (count < 0) {\n        perror(\"Failed to load people\");\n        return 1;\n    }\n\n    for (int i = 0; i < count; i++) {\n        print_person(&users[i]);\n        printf(\"--------\\n\");\n    }\n\n    LOG(\"Program finished\");\n    return 0;\n}\n",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "include",
+    "start_line": 3,
+    "end_line": 4,
+    "code": "#include <stdio.h>\n",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "include",
+    "start_line": 4,
+    "end_line": 5,
+    "code": "#include <stdlib.h>\n",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "include",
+    "start_line": 5,
+    "end_line": 6,
+    "code": "#include <string.h>\n",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "macro",
+    "start_line": 7,
+    "end_line": 8,
+    "code": "#define MAX_USERS 100\n",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "macro_function",
+    "start_line": 8,
+    "end_line": 9,
+    "code": "#define LOG(msg) printf(\"[LOG] %s:%d - %s\\n\", __FILE__, __LINE__, msg)\n",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "typedef",
+    "start_line": 10,
+    "end_line": 18,
+    "code": "typedef struct {\n    char name[50];\n    int age;\n    union {\n        float gpa;\n        int rank;\n    } performance;\n    enum { STUDENT, TEACHER } role;\n} Person;",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct",
+    "start_line": 10,
+    "end_line": 18,
+    "code": "struct {\n    char name[50];\n    int age;\n    union {\n        float gpa;\n        int rank;\n    } performance;\n    enum { STUDENT, TEACHER } role;\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "enum",
+    "start_line": 17,
+    "end_line": 17,
+    "code": "enum { STUDENT, TEACHER }",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 20,
+    "end_line": 20,
+    "code": "static const char *roles[] = { \"Student\", \"Teacher\" };",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "static_const_char_pointer_array",
+    "start_line": 20,
+    "end_line": 20,
+    "code": "static const char *roles[] = { \"Student\", \"Teacher\" };",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 20,
+    "end_line": 20,
+    "code": "{ \"Student\", \"Teacher\" }",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "function",
+    "start_line": 22,
+    "end_line": 30,
+    "code": "static void print_person(const Person *p) {\n    printf(\"Name: %s\\n\", p->name);\n    printf(\"Age: %d\\n\", p->age);\n    printf(\"Role: %s\\n\", roles[p->role]);\n    if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 22,
+    "end_line": 30,
+    "code": "static void print_person(const Person *p) {\n    printf(\"Name: %s\\n\", p->name);\n    printf(\"Age: %d\\n\", p->age);\n    printf(\"Role: %s\\n\", roles[p->role]);\n    if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 22,
+    "end_line": 30,
+    "code": "static void print_person(const Person *p) {\n    printf(\"Name: %s\\n\", p->name);\n    printf(\"Age: %d\\n\", p->age);\n    printf(\"Role: %s\\n\", roles[p->role]);\n    if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 22,
+    "end_line": 30,
+    "code": "{\n    printf(\"Name: %s\\n\", p->name);\n    printf(\"Age: %d\\n\", p->age);\n    printf(\"Role: %s\\n\", roles[p->role]);\n    if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 22,
+    "end_line": 30,
+    "code": "{\n    printf(\"Name: %s\\n\", p->name);\n    printf(\"Age: %d\\n\", p->age);\n    printf(\"Role: %s\\n\", roles[p->role]);\n    if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 26,
+    "end_line": 29,
+    "code": "if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 26,
+    "end_line": 29,
+    "code": "if (p->role == STUDENT)\n        printf(\"GPA: %.2f\\n\", p->performance.gpa);\n    else\n        printf(\"Rank: %d\\n\", p->performance.rank);",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 26,
+    "end_line": 26,
+    "code": "(p->role == STUDENT)",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "function",
+    "start_line": 32,
+    "end_line": 46,
+    "code": "int load_people(const char *filename, Person *people, int max) {\n    FILE *fp = fopen(filename, \"r\");\n    if (!fp) return -1;\n\n    int count = 0;\n    while (count < max && fscanf(fp, \"%49[^,],%d,%f,%d\\n\",\n           people[count].name,\n           &people[count].age,\n           &people[count].performance.gpa,\n           (int*)&people[count].role) == 4) {\n        count++;\n    }\n    fclose(fp);\n    return count;\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 32,
+    "end_line": 46,
+    "code": "int load_people(const char *filename, Person *people, int max) {\n    FILE *fp = fopen(filename, \"r\");\n    if (!fp) return -1;\n\n    int count = 0;\n    while (count < max && fscanf(fp, \"%49[^,],%d,%f,%d\\n\",\n           people[count].name,\n           &people[count].age,\n           &people[count].performance.gpa,\n           (int*)&people[count].role) == 4) {\n        count++;\n    }\n    fclose(fp);\n    return count;\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 32,
+    "end_line": 46,
+    "code": "{\n    FILE *fp = fopen(filename, \"r\");\n    if (!fp) return -1;\n\n    int count = 0;\n    while (count < max && fscanf(fp, \"%49[^,],%d,%f,%d\\n\",\n           people[count].name,\n           &people[count].age,\n           &people[count].performance.gpa,\n           (int*)&people[count].role) == 4) {\n        count++;\n    }\n    fclose(fp);\n    return count;\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 33,
+    "end_line": 33,
+    "code": "FILE *fp = fopen(filename, \"r\");",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 36,
+    "end_line": 36,
+    "code": "int count = 0;",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 37,
+    "end_line": 43,
+    "code": "while (count < max && fscanf(fp, \"%49[^,],%d,%f,%d\\n\",\n           people[count].name,\n           &people[count].age,\n           &people[count].performance.gpa,\n           (int*)&people[count].role) == 4) {\n        count++;\n    }",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "function",
+    "start_line": 48,
+    "end_line": 66,
+    "code": "int main(void) {\n    LOG(\"Program started\");\n\n    Person users[MAX_USERS];\n    int count = load_people(\"people.txt\", users, MAX_USERS);\n\n    if (count < 0) {\n        perror(\"Failed to load people\");\n        return 1;\n    }\n\n    for (int i = 0; i < count; i++) {\n        print_person(&users[i]);\n        printf(\"--------\\n\");\n    }\n\n    LOG(\"Program finished\");\n    return 0;\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 48,
+    "end_line": 66,
+    "code": "int main(void) {\n    LOG(\"Program started\");\n\n    Person users[MAX_USERS];\n    int count = load_people(\"people.txt\", users, MAX_USERS);\n\n    if (count < 0) {\n        perror(\"Failed to load people\");\n        return 1;\n    }\n\n    for (int i = 0; i < count; i++) {\n        print_person(&users[i]);\n        printf(\"--------\\n\");\n    }\n\n    LOG(\"Program finished\");\n    return 0;\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 48,
+    "end_line": 66,
+    "code": "{\n    LOG(\"Program started\");\n\n    Person users[MAX_USERS];\n    int count = load_people(\"people.txt\", users, MAX_USERS);\n\n    if (count < 0) {\n        perror(\"Failed to load people\");\n        return 1;\n    }\n\n    for (int i = 0; i < count; i++) {\n        print_person(&users[i]);\n        printf(\"--------\\n\");\n    }\n\n    LOG(\"Program finished\");\n    return 0;\n}",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 52,
+    "end_line": 52,
+    "code": "int count = load_people(\"people.txt\", users, MAX_USERS);",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 52,
+    "end_line": 52,
+    "code": "int count = load_people(\"people.txt\", users, MAX_USERS);",
+    "file": "data/codebase/complex_code.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 59,
+    "end_line": 59,
+    "code": "int i = 0;",
+    "file": "data/codebase/complex_code.c"
+  }
+]
