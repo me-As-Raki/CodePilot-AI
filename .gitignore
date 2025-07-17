@@ -18,9 +18,7 @@ test_retrevier.py
 
 
 
-# Ignore Tree-sitter tools
-tree-sitter-c/
-tree_sitter_grammars/
+# Ignore Tree-sitter tool
 tree-sitter.exe
 tree-parser.exe
 
