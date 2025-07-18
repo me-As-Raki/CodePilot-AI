@@ -1,0 +1,17 @@
+[
+  {
+    "timestamp": "2025-07-18 16:42:33",
+    "question": "What does this function do?",
+    "answer": "This function calculates the factorial of a number recursively."
+  },
+  {
+    "timestamp": "2025-07-18 16:45:10",
+    "question": "How many global variables are declared?",
+    "answer": "There are 2 global variables declared in the file: `counter` and `max_limit`."
+  },
+  {
+    "timestamp": "2025-07-18 22:28:53",
+    "question": "In device-manager.c, what does this device-manager.c do?",
+    "answer": "Based solely on the provided code snippets, `device-manager.c` defines a structure to represent devices (including name, ID, firmware version, and type), an array of devices, and functions to print device information and calculate the average firmware version. The `main` function initializes an array of three devices and then prints their details and the average firmware version.  The code also includes header files for standard input/output and string manipulation, defines constants for maximum number of devices and company name, and defines an enumeration for device types."
+  }
+]

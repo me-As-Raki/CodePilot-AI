@@ -1,5 +1,413 @@
 [
   {
+    "file": "data/codebase\\coded (1).c",
+    "type": "preprocessor_directive",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "preprocessor_directive",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#include <stdlib.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "preprocessor_directive",
+    "start_line": 6,
+    "end_line": 6,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "macro",
+    "start_line": 8,
+    "end_line": 8,
+    "comments": "// coded.c - Complex C example for RAG testing",
+    "code": "#define MAX_USERS 100\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "macro",
+    "start_line": 9,
+    "end_line": 9,
+    "comments": "",
+    "code": "#define APP_NAME \"CodedApp\"\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "enum",
+    "start_line": 11,
+    "end_line": 18,
+    "comments": "",
+    "code": "typedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "assignment",
+    "start_line": 24,
+    "end_line": 24,
+    "comments": "",
+    "code": "static int user_count = 0;\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "assignment",
+    "start_line": 28,
+    "end_line": 28,
+    "comments": "// Initialize the user database",
+    "code": "    user_count = 3;\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "assignment",
+    "start_line": 36,
+    "end_line": 36,
+    "comments": "// Find a user by name",
+    "code": "    for (int i = 0; i < user_count; i++) {\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "find_user",
+    "start_line": 44,
+    "end_line": 45,
+    "code": "    User *u = find_user(name);\n"
+  },
+  {
+    "file": "data/codebase\\coded (1).c",
+    "type": "struct_assignment",
+    "start_line": 47,
+    "end_line": 47,
+    "comments": "// Promote a user to admin",
+    "code": "        u->role = ROLE_ADMIN;\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 54,
+    "end_line": 55,
+    "code": "    printf(\"User List:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "s",
+    "start_line": 56,
+    "end_line": 57,
+    "code": "        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "init_users",
+    "start_line": 62,
+    "end_line": 63,
+    "code": "    init_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 63,
+    "end_line": 64,
+    "code": "    list_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "promote_user",
+    "start_line": 64,
+    "end_line": 65,
+    "code": "    promote_user(\"Bob\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 65,
+    "end_line": 66,
+    "code": "    printf(\"\\nAfter Promotion:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 66,
+    "end_line": 67,
+    "code": "    list_users();\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "preprocessor_directive",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "preprocessor_directive",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#include <stdlib.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "preprocessor_directive",
+    "start_line": 6,
+    "end_line": 6,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "macro",
+    "start_line": 8,
+    "end_line": 8,
+    "comments": "// coded.c - Complex C example for RAG testing",
+    "code": "#define MAX_USERS 100\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "macro",
+    "start_line": 9,
+    "end_line": 9,
+    "comments": "",
+    "code": "#define APP_NAME \"CodedApp\"\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "enum",
+    "start_line": 11,
+    "end_line": 18,
+    "comments": "",
+    "code": "typedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "assignment",
+    "start_line": 24,
+    "end_line": 24,
+    "comments": "",
+    "code": "static int user_count = 0;\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "assignment",
+    "start_line": 28,
+    "end_line": 28,
+    "comments": "// Initialize the user database",
+    "code": "    user_count = 3;\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "assignment",
+    "start_line": 36,
+    "end_line": 36,
+    "comments": "// Find a user by name",
+    "code": "    for (int i = 0; i < user_count; i++) {\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "find_user",
+    "start_line": 44,
+    "end_line": 45,
+    "code": "    User *u = find_user(name);\n"
+  },
+  {
+    "file": "data/codebase\\coded (2).c",
+    "type": "struct_assignment",
+    "start_line": 47,
+    "end_line": 47,
+    "comments": "// Promote a user to admin",
+    "code": "        u->role = ROLE_ADMIN;\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 54,
+    "end_line": 55,
+    "code": "    printf(\"User List:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "s",
+    "start_line": 56,
+    "end_line": 57,
+    "code": "        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "init_users",
+    "start_line": 62,
+    "end_line": 63,
+    "code": "    init_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 63,
+    "end_line": 64,
+    "code": "    list_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "promote_user",
+    "start_line": 64,
+    "end_line": 65,
+    "code": "    promote_user(\"Bob\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 65,
+    "end_line": 66,
+    "code": "    printf(\"\\nAfter Promotion:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 66,
+    "end_line": 67,
+    "code": "    list_users();\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "preprocessor_directive",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "preprocessor_directive",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#include <stdlib.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "preprocessor_directive",
+    "start_line": 6,
+    "end_line": 6,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "macro",
+    "start_line": 8,
+    "end_line": 8,
+    "comments": "// coded.c - Complex C example for RAG testing",
+    "code": "#define MAX_USERS 100\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "macro",
+    "start_line": 9,
+    "end_line": 9,
+    "comments": "",
+    "code": "#define APP_NAME \"CodedApp\"\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "enum",
+    "start_line": 11,
+    "end_line": 18,
+    "comments": "",
+    "code": "typedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "assignment",
+    "start_line": 24,
+    "end_line": 24,
+    "comments": "",
+    "code": "static int user_count = 0;\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "assignment",
+    "start_line": 28,
+    "end_line": 28,
+    "comments": "// Initialize the user database",
+    "code": "    user_count = 3;\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "assignment",
+    "start_line": 36,
+    "end_line": 36,
+    "comments": "// Find a user by name",
+    "code": "    for (int i = 0; i < user_count; i++) {\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "find_user",
+    "start_line": 44,
+    "end_line": 45,
+    "code": "    User *u = find_user(name);\n"
+  },
+  {
+    "file": "data/codebase\\coded (3).c",
+    "type": "struct_assignment",
+    "start_line": 47,
+    "end_line": 47,
+    "comments": "// Promote a user to admin",
+    "code": "        u->role = ROLE_ADMIN;\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 54,
+    "end_line": 55,
+    "code": "    printf(\"User List:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "s",
+    "start_line": 56,
+    "end_line": 57,
+    "code": "        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "init_users",
+    "start_line": 62,
+    "end_line": 63,
+    "code": "    init_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 63,
+    "end_line": 64,
+    "code": "    list_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "promote_user",
+    "start_line": 64,
+    "end_line": 65,
+    "code": "    promote_user(\"Bob\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 65,
+    "end_line": 66,
+    "code": "    printf(\"\\nAfter Promotion:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 66,
+    "end_line": 67,
+    "code": "    list_users();\n"
+  },
+  {
     "file": "data/codebase\\coded (4).c",
     "type": "preprocessor_directive",
     "start_line": 4,
@@ -80,6 +488,278 @@
   },
   {
     "file": "data/codebase\\coded (4).c",
+    "type": "struct_assignment",
+    "start_line": 47,
+    "end_line": 47,
+    "comments": "// Promote a user to admin",
+    "code": "        u->role = ROLE_ADMIN;\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 54,
+    "end_line": 55,
+    "code": "    printf(\"User List:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "s",
+    "start_line": 56,
+    "end_line": 57,
+    "code": "        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "init_users",
+    "start_line": 62,
+    "end_line": 63,
+    "code": "    init_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 63,
+    "end_line": 64,
+    "code": "    list_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "promote_user",
+    "start_line": 64,
+    "end_line": 65,
+    "code": "    promote_user(\"Bob\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 65,
+    "end_line": 66,
+    "code": "    printf(\"\\nAfter Promotion:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 66,
+    "end_line": 67,
+    "code": "    list_users();\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "preprocessor_directive",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "preprocessor_directive",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#include <stdlib.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "preprocessor_directive",
+    "start_line": 6,
+    "end_line": 6,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "macro",
+    "start_line": 8,
+    "end_line": 8,
+    "comments": "// coded.c - Complex C example for RAG testing",
+    "code": "#define MAX_USERS 100\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "macro",
+    "start_line": 9,
+    "end_line": 9,
+    "comments": "",
+    "code": "#define APP_NAME \"CodedApp\"\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "enum",
+    "start_line": 11,
+    "end_line": 18,
+    "comments": "",
+    "code": "typedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "assignment",
+    "start_line": 24,
+    "end_line": 24,
+    "comments": "",
+    "code": "static int user_count = 0;\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "assignment",
+    "start_line": 28,
+    "end_line": 28,
+    "comments": "// Initialize the user database",
+    "code": "    user_count = 3;\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "assignment",
+    "start_line": 36,
+    "end_line": 36,
+    "comments": "// Find a user by name",
+    "code": "    for (int i = 0; i < user_count; i++) {\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "find_user",
+    "start_line": 44,
+    "end_line": 45,
+    "code": "    User *u = find_user(name);\n"
+  },
+  {
+    "file": "data/codebase\\coded (5).c",
+    "type": "struct_assignment",
+    "start_line": 47,
+    "end_line": 47,
+    "comments": "// Promote a user to admin",
+    "code": "        u->role = ROLE_ADMIN;\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 54,
+    "end_line": 55,
+    "code": "    printf(\"User List:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "s",
+    "start_line": 56,
+    "end_line": 57,
+    "code": "        printf(\"%d: %s (%d)\\n\", user_db[i].id, user_db[i].name, user_db[i].role);\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "init_users",
+    "start_line": 62,
+    "end_line": 63,
+    "code": "    init_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 63,
+    "end_line": 64,
+    "code": "    list_users();\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "promote_user",
+    "start_line": 64,
+    "end_line": 65,
+    "code": "    promote_user(\"Bob\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "printf",
+    "start_line": 65,
+    "end_line": 66,
+    "code": "    printf(\"\\nAfter Promotion:\\n\");\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "list_users",
+    "start_line": 66,
+    "end_line": 67,
+    "code": "    list_users();\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "preprocessor_directive",
+    "start_line": 4,
+    "end_line": 4,
+    "comments": "",
+    "code": "#include <stdio.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "preprocessor_directive",
+    "start_line": 5,
+    "end_line": 5,
+    "comments": "",
+    "code": "#include <stdlib.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "preprocessor_directive",
+    "start_line": 6,
+    "end_line": 6,
+    "comments": "",
+    "code": "#include <string.h>\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "macro",
+    "start_line": 8,
+    "end_line": 8,
+    "comments": "// coded.c - Complex C example for RAG testing",
+    "code": "#define MAX_USERS 100\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "macro",
+    "start_line": 9,
+    "end_line": 9,
+    "comments": "",
+    "code": "#define APP_NAME \"CodedApp\"\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "enum",
+    "start_line": 11,
+    "end_line": 18,
+    "comments": "",
+    "code": "typedef enum {\n    ROLE_ADMIN,\n    ROLE_USER,\n    ROLE_GUEST\n} UserRole;\n\ntypedef struct {\n    int id;\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "assignment",
+    "start_line": 24,
+    "end_line": 24,
+    "comments": "",
+    "code": "static int user_count = 0;\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "assignment",
+    "start_line": 28,
+    "end_line": 28,
+    "comments": "// Initialize the user database",
+    "code": "    user_count = 3;\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
+    "type": "assignment",
+    "start_line": 36,
+    "end_line": 36,
+    "comments": "// Find a user by name",
+    "code": "    for (int i = 0; i < user_count; i++) {\n"
+  },
+  {
+    "type": "function_prototype",
+    "name": "find_user",
+    "start_line": 44,
+    "end_line": 45,
+    "code": "    User *u = find_user(name);\n"
+  },
+  {
+    "file": "data/codebase\\coded.c",
     "type": "struct_assignment",
     "start_line": 47,
     "end_line": 47,
@@ -405,5 +1085,21 @@
     "end_line": 51,
     "comments": "",
     "code": "        { \"MainController\", 3, 3.00f, CONTROLLER }\n    };\n\n    for (int i = 0; i < 3; i++) {\n        print_device(&devices[i]);\n        printf(\"---------------\\n\");\n    }\n\n    printf(\"Average Firmware Version: %.2f\\n\", average_firmware(devices, 3));\n    return 0;\n}\n"
+  },
+  {
+    "file": "data/codebase\\lprint-cpcl.c",
+    "type": "preprocessor_directive",
+    "start_line": 10,
+    "end_line": 10,
+    "comments": "",
+    "code": "#include \"lprint.h\"\n"
+  },
+  {
+    "file": "data/codebase\\lprint-cpcl.c",
+    "type": "preprocessor_block",
+    "start_line": 11,
+    "end_line": 422,
+    "comments": "//\n// Experimental CPCL driver for LPrint, a Label Printer Application\n//\n// Copyright \u00a9\u00a02019-2025 by Michael R Sweet.\n//\n// Licensed under Apache License v2.0.  See the file \"LICENSE\" for more\n// information.\n//\n//\n// Local types...\n//\n//\n// Local globals...\n//\n//\n// Local functions...\n//\n//\n// 'lprintInit()' - Initialize the driver.\n//\n//\n// 'lprint_cpcl_printfile()' - Print a file.\n//\n// Copy the raw file...\n// Copy print data...\n//\n// 'lprint_cpcl_rend()' - End a job.\n//\n// CPCL driver data\n//\n// 'lprint_cpcl_rendpage()' - End a page.\n//\n// CPCL driver data\n// Write last line\n// Set options\n// Continuous media, so always set tracking to continuous...\n// Eject\n// Free memory and return...\n//\n// 'lprint_cpcl_rstartjob()' - Start a job.\n//\n// CPCL driver data\n// Save driver data...\n//\n// 'lprint_cpcl_rstartpage()' - Start a page.\n//\n// CPCL driver data\n// Initialize the dither buffer...\n// Initialize the printer...\n// Start the page image...\n//\n// 'lprint_cpcl_rwriteline()' - Write a raster line.\n//\n// CPCL driver data\n// Dither and write the line...\n//\n// 'lprint_cpcl_status()' - Get current printer status.\n//",
+    "code": "#ifdef LPRINT_EXPERIMENTAL\ntypedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\nstatic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n  \"oe_2.9x1-label_2.9x1in\",\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n  \"oe_3.5x1-label_3.5x1in\",\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\nstatic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\nstatic bool\tlprint_cpcl_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);\nstatic bool\tlprint_cpcl_status(pappl_printer_t *printer);\nbool\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n  data->num_resolution = 1;\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n  data->x_default = data->y_default = data->x_resolution[0];\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n  data->bottom_top = data->left_right = 1;\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n  return (true);\n}\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n  papplJobSetImpressions(job, 1);\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n  papplJobSetImpressionsCompleted(job, 1);\n  return (true);\n}\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n  (void)options;\n  (void)device;\n  free(cpcl);\n  papplJobSetData(job, NULL);\n  return (true);\n}\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n  int\tdarkness;\t\t\t// Composite darkness value\n  (void)page;\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n  lprintDitherFree(&cpcl->dither);\n  return (true);\n}\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n  (void)options;\n  (void)device;\n  papplJobSetData(job, cpcl);\n  return (true);\n}\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n  (void)page;\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n  return (true);\n}\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n  (void)options;\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n  return (true);\n}\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n  return (true);\n}\n#endif // LPRINT_EXPERIMENTAL\n"
   }
 ]

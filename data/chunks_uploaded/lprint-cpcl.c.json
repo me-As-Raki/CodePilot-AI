@@ -1,0 +1,1066 @@
+[
+  {
+    "type": "struct_assignment",
+    "start_line": 1,
+    "end_line": 423,
+    "code": "//\n// Experimental CPCL driver for LPrint, a Label Printer Application\n//\n// Copyright \u00a9\u00a02019-2025 by Michael R Sweet.\n//\n// Licensed under Apache License v2.0.  See the file \"LICENSE\" for more\n// information.\n//\n\n#include \"lprint.h\"\n#ifdef LPRINT_EXPERIMENTAL\n\n\n//\n// Local types...\n//\n\ntypedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\n\n\n//\n// Local globals...\n//\n\nstatic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\nstatic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\n\n\n//\n// Local functions...\n//\n\nstatic bool\tlprint_cpcl_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);\nstatic bool\tlprint_cpcl_status(pappl_printer_t *printer);\n\n\n//\n// 'lprintInit()' - Initialize the driver.\n//\n\nbool\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_printfile()' - Print a file.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rend()' - End a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n  (void)options;\n  (void)device;\n\n  free(cpcl);\n  papplJobSetData(job, NULL);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rendpage()' - End a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartjob()' - Start a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartpage()' - Start a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rwriteline()' - Write a raster line.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_status()' - Get current printer status.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n\n  return (true);\n}\n#endif // LPRINT_EXPERIMENTAL\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 1,
+    "end_line": 423,
+    "code": "//\n// Experimental CPCL driver for LPrint, a Label Printer Application\n//\n// Copyright \u00a9\u00a02019-2025 by Michael R Sweet.\n//\n// Licensed under Apache License v2.0.  See the file \"LICENSE\" for more\n// information.\n//\n\n#include \"lprint.h\"\n#ifdef LPRINT_EXPERIMENTAL\n\n\n//\n// Local types...\n//\n\ntypedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\n\n\n//\n// Local globals...\n//\n\nstatic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\nstatic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\n\n\n//\n// Local functions...\n//\n\nstatic bool\tlprint_cpcl_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);\nstatic bool\tlprint_cpcl_status(pappl_printer_t *printer);\n\n\n//\n// 'lprintInit()' - Initialize the driver.\n//\n\nbool\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_printfile()' - Print a file.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rend()' - End a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n  (void)options;\n  (void)device;\n\n  free(cpcl);\n  papplJobSetData(job, NULL);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rendpage()' - End a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartjob()' - Start a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartpage()' - Start a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rwriteline()' - Write a raster line.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_status()' - Get current printer status.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n\n  return (true);\n}\n#endif // LPRINT_EXPERIMENTAL\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "static_const_char_pointer_array",
+    "start_line": 1,
+    "end_line": 423,
+    "code": "//\n// Experimental CPCL driver for LPrint, a Label Printer Application\n//\n// Copyright \u00a9\u00a02019-2025 by Michael R Sweet.\n//\n// Licensed under Apache License v2.0.  See the file \"LICENSE\" for more\n// information.\n//\n\n#include \"lprint.h\"\n#ifdef LPRINT_EXPERIMENTAL\n\n\n//\n// Local types...\n//\n\ntypedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\n\n\n//\n// Local globals...\n//\n\nstatic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\nstatic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\n\n\n//\n// Local functions...\n//\n\nstatic bool\tlprint_cpcl_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);\nstatic bool\tlprint_cpcl_status(pappl_printer_t *printer);\n\n\n//\n// 'lprintInit()' - Initialize the driver.\n//\n\nbool\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_printfile()' - Print a file.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rend()' - End a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n  (void)options;\n  (void)device;\n\n  free(cpcl);\n  papplJobSetData(job, NULL);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rendpage()' - End a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartjob()' - Start a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartpage()' - Start a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rwriteline()' - Write a raster line.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_status()' - Get current printer status.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n\n  return (true);\n}\n#endif // LPRINT_EXPERIMENTAL\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "include",
+    "start_line": 10,
+    "end_line": 11,
+    "code": "nclude \"lprint.h\"\n#i",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "preprocessor",
+    "start_line": 11,
+    "end_line": 422,
+    "code": "fdef LPRINT_EXPERIMENTAL\n\n\n//\n// Local types...\n//\n\ntypedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\n\n\n//\n// Local globals...\n//\n\nstatic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\nstatic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\n\n\n//\n// Local functions...\n//\n\nstatic bool\tlprint_cpcl_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);\nstatic bool\tlprint_cpcl_status(pappl_printer_t *printer);\n\n\n//\n// 'lprintInit()' - Initialize the driver.\n//\n\nbool\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_printfile()' - Print a file.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rend()' - End a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n  (void)options;\n  (void)device;\n\n  free(cpcl);\n  papplJobSetData(job, NULL);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rendpage()' - End a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartjob()' - Start a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartpage()' - Start a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rwriteline()' - Write a raster line.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_status()' - Get current printer status.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n\n  return (true);\n}\n#endif /",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 11,
+    "end_line": 422,
+    "code": "fdef LPRINT_EXPERIMENTAL\n\n\n//\n// Local types...\n//\n\ntypedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\n\n\n//\n// Local globals...\n//\n\nstatic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\nstatic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\n\n\n//\n// Local functions...\n//\n\nstatic bool\tlprint_cpcl_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);\nstatic bool\tlprint_cpcl_status(pappl_printer_t *printer);\n\n\n//\n// 'lprintInit()' - Initialize the driver.\n//\n\nbool\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_printfile()' - Print a file.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rend()' - End a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n  (void)options;\n  (void)device;\n\n  free(cpcl);\n  papplJobSetData(job, NULL);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rendpage()' - End a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartjob()' - Start a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartpage()' - Start a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rwriteline()' - Write a raster line.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_status()' - Get current printer status.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n\n  return (true);\n}\n#endif /",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 11,
+    "end_line": 422,
+    "code": "fdef LPRINT_EXPERIMENTAL\n\n\n//\n// Local types...\n//\n\ntypedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\n\n\n//\n// Local globals...\n//\n\nstatic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\nstatic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\n\n\n//\n// Local functions...\n//\n\nstatic bool\tlprint_cpcl_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);\nstatic bool\tlprint_cpcl_status(pappl_printer_t *printer);\n\n\n//\n// 'lprintInit()' - Initialize the driver.\n//\n\nbool\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_printfile()' - Print a file.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rend()' - End a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n  (void)options;\n  (void)device;\n\n  free(cpcl);\n  papplJobSetData(job, NULL);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rendpage()' - End a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartjob()' - Start a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartpage()' - Start a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rwriteline()' - Write a raster line.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_status()' - Get current printer status.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n\n  return (true);\n}\n#endif /",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "static_const_char_pointer_array",
+    "start_line": 11,
+    "end_line": 422,
+    "code": "fdef LPRINT_EXPERIMENTAL\n\n\n//\n// Local types...\n//\n\ntypedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\n\n\n//\n// Local globals...\n//\n\nstatic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\nstatic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\n\n\n//\n// Local functions...\n//\n\nstatic bool\tlprint_cpcl_printfile(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rendpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rstartjob(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device);\nstatic bool\tlprint_cpcl_rstartpage(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned page);\nstatic bool\tlprint_cpcl_rwriteline(pappl_job_t *job, pappl_pr_options_t *options, pappl_device_t *device, unsigned y, const unsigned char *line);\nstatic bool\tlprint_cpcl_status(pappl_printer_t *printer);\n\n\n//\n// 'lprintInit()' - Initialize the driver.\n//\n\nbool\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_printfile()' - Print a file.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rend()' - End a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n  (void)options;\n  (void)device;\n\n  free(cpcl);\n  papplJobSetData(job, NULL);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rendpage()' - End a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartjob()' - Start a job.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rstartpage()' - Start a page.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_rwriteline()' - Write a raster line.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n\n//\n// 'lprint_cpcl_status()' - Get current printer status.\n//\n\nstatic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n\n  return (true);\n}\n#endif /",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "typedef",
+    "start_line": 18,
+    "end_line": 21,
+    "code": "pedef struct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} lprint_cpcl_t;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct",
+    "start_line": 18,
+    "end_line": 21,
+    "code": "ruct lprint_cpcl_s\t\t// CPCL driver data\n{\n  lprint_dither_t dither;\t\t// Dither buffer\n} l",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 28,
+    "end_line": 88,
+    "code": "atic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 28,
+    "end_line": 88,
+    "code": "atic const char * const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 28,
+    "end_line": 88,
+    "code": "const lprint_cpcl_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"oe_1.25x0.25-label_1.25x0.25in\",\n  \"oe_1.25x2.25-label_1.25x2.25in\",\n\n  \"oe_1.5x0.25-label_1.5x0.25in\",\n  \"oe_1.5x0.5-label_1.5x0.5in\",\n  \"oe_1.5x1-label_1.5x1in\",\n  \"oe_1.5x2-label_1.5x2in\",\n\n  \"oe_2x0.37-label_2x0.37in\",\n  \"oe_2x0.5-label_2x0.5in\",\n  \"oe_2x1-label_2x1in\",\n  \"oe_2x1.25-label_2x1.25in\",\n  \"oe_2x2-label_2x2in\",\n  \"oe_2x3-label_2x3in\",\n  \"oe_2x4-label_2x4in\",\n  \"oe_2x5.5-label_2x5.5in\",\n\n  \"oe_2.25x0.5-label_2.25x0.5in\",\n  \"oe_2.25x1.25-label_2.25x1.25in\",\n  \"oe_30859-paint-can-label_2.25x3.125in\",\n  \"oe_2.25x4-label_2.25x4in\",\n  \"oe_2.25x5.5-label_2.25x5.5in\",\n\n  \"oe_2.38x5.5-label_2.38x5.5in\",\n\n  \"oe_2.5x1-label_2.5x1in\",\n  \"oe_2.5x2-label_2.5x2in\",\n\n  \"oe_2.75x1.25-label_2.75x1.25in\",\n\n  \"oe_2.9x1-label_2.9x1in\",\n\n  \"oe_3x1-label_3x1in\",\n  \"oe_3x1.25-label_3x1.25in\",\n  \"oe_3x2-label_3x2in\",\n  \"oe_3x3-label_3x3in\",\n  \"oe_3x5-label_3x5in\",\n\n  \"oe_3.25x2-label_3.25x2in\",\n  \"oe_3.25x5-label_3.25x5in\",\n  \"oe_3.25x5.5-label_3.25x5.5in\",\n  \"oe_3.25x5.83-label_3.25x5.83in\",\n  \"oe_3.25x7.83-label_3.25x7.83in\",\n\n  \"oe_3.5x1-label_3.5x1in\",\n\n  \"oe_4x1-label_4x1in\",\n  \"oe_4x2-label_4x2in\",\n  \"oe_4x3-label_4x3in\",\n  \"oe_4x4-label_4x4in\",\n  \"oe_4x5-label_4x5in\",\n  \"oe_4x6-label_4x6in\",\n  \"oe_4x6.5-label_4x6.5in\",\n  \"oe_4x7.83-label_4x7.83in\",\n  \"oe_4x13-label_4x13in\",\n\n  \"roll_max_4x50in\",\n  \"roll_min_1.25x0.25in\"\n};\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 90,
+    "end_line": 94,
+    "code": "atic const char * const lprint_hma300e_media[] =\n{\t\t\t\t\t// Supported media sizes\n  \"roll_max_80x1000mm\",\n  \"roll_min_25x25mm\"\n};\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function",
+    "start_line": 114,
+    "end_line": 191,
+    "code": "ol\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 114,
+    "end_line": 191,
+    "code": "ol\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 114,
+    "end_line": 191,
+    "code": "ol\t\t\t\t\t// O - `true` on success, `false` on error\nlprintCPCL(\n    pappl_system_t         *system,\t// I - System\n    const char             *driver_name,// I - Driver name\n    const char             *device_uri,\t// I - Device URI\n    const char             *device_id,\t// I - 1284 device ID\n    pappl_pr_driver_data_t *data,\t// I - Pointer to driver data\n    ipp_t                  **attrs,\t// O - Pointer to driver attributes\n    void                   *cbdata)\t// I - Callback data (not used)\n{\n  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 123,
+    "end_line": 191,
+    "code": "  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 123,
+    "end_line": 191,
+    "code": "  data->printfile_cb  = lprint_cpcl_printfile;\n  data->rendjob_cb    = lprint_cpcl_rendjob;\n  data->rendpage_cb   = lprint_cpcl_rendpage;\n  data->rstartjob_cb  = lprint_cpcl_rstartjob;\n  data->rstartpage_cb = lprint_cpcl_rstartpage;\n  data->rwriteline_cb = lprint_cpcl_rwriteline;\n  data->status_cb     = lprint_cpcl_status;\n  data->format        = LPRINT_CPCL_MIMETYPE;\n\n  data->num_resolution = 1;\n\n  if (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n  data->x_default = data->y_default = data->x_resolution[0];\n\n  data->finishings |= PAPPL_FINISHINGS_TRIM;\n\n  if (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n  data->bottom_top = data->left_right = 1;\n\n  data->num_source = 1;\n  data->source[0]  = \"main-roll\";\n\n  data->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n  data->num_type = 3;\n  data->type[0]  = \"continuous\";\n  data->type[1]  = \"labels\";\n  data->type[2]  = \"labels-continuous\";\n\n  data->tear_offset_configured   = 0;\n  data->tear_offset_supported[0] = -1500;\n  data->tear_offset_supported[1] = 1500;\n\n  data->speed_default      = 0;\n  data->speed_supported[0] = 2540;\n  data->speed_supported[1] = 4 * 2540;\n\n  data->darkness_configured = 50;\n  data->darkness_supported  = 30;\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 124,
+    "end_line": 124,
+    "code": "ta->printfile_cb  = lprint_cpcl_printfile;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 124,
+    "end_line": 124,
+    "code": "ta->printfile_cb  = lprint_cpcl_printfile;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 125,
+    "end_line": 125,
+    "code": "ta->rendjob_cb    = lprint_cpcl_rendjob;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 125,
+    "end_line": 125,
+    "code": "ta->rendjob_cb    = lprint_cpcl_rendjob;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 126,
+    "end_line": 126,
+    "code": "ta->rendpage_cb   = lprint_cpcl_rendpage;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 126,
+    "end_line": 126,
+    "code": "ta->rendpage_cb   = lprint_cpcl_rendpage;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 127,
+    "end_line": 127,
+    "code": "ta->rstartjob_cb  = lprint_cpcl_rstartjob;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 127,
+    "end_line": 127,
+    "code": "ta->rstartjob_cb  = lprint_cpcl_rstartjob;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 128,
+    "end_line": 128,
+    "code": "ta->rstartpage_cb = lprint_cpcl_rstartpage;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 128,
+    "end_line": 128,
+    "code": "ta->rstartpage_cb = lprint_cpcl_rstartpage;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 129,
+    "end_line": 129,
+    "code": "ta->rwriteline_cb = lprint_cpcl_rwriteline;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 129,
+    "end_line": 129,
+    "code": "ta->rwriteline_cb = lprint_cpcl_rwriteline;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 130,
+    "end_line": 130,
+    "code": "ta->status_cb     = lprint_cpcl_status;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 130,
+    "end_line": 130,
+    "code": "ta->status_cb     = lprint_cpcl_status;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 131,
+    "end_line": 131,
+    "code": "ta->format        = LPRINT_CPCL_MIMETYPE;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 131,
+    "end_line": 131,
+    "code": "ta->format        = LPRINT_CPCL_MIMETYPE;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 133,
+    "end_line": 133,
+    "code": "ta->num_resolution = 1;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 133,
+    "end_line": 133,
+    "code": "ta->num_resolution = 1;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 135,
+    "end_line": 144,
+    "code": " (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 135,
+    "end_line": 144,
+    "code": " (strstr(driver_name, \"-203dpi\"))\n  {\n    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n  else\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 136,
+    "end_line": 139,
+    "code": "    data->x_resolution[0] = 203;\n    data->y_resolution[0] = 203;\n  }\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 137,
+    "end_line": 137,
+    "code": "ta->x_resolution[0] = 203;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 137,
+    "end_line": 137,
+    "code": "ta->x_resolution[0] = 203;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 138,
+    "end_line": 138,
+    "code": "ta->y_resolution[0] = 203;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 138,
+    "end_line": 138,
+    "code": "ta->y_resolution[0] = 203;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 140,
+    "end_line": 144,
+    "code": "se\n  {\n    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 141,
+    "end_line": 144,
+    "code": "    data->x_resolution[0] = 300;\n    data->y_resolution[0] = 300;\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 142,
+    "end_line": 142,
+    "code": "ta->x_resolution[0] = 300;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 142,
+    "end_line": 142,
+    "code": "ta->x_resolution[0] = 300;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 143,
+    "end_line": 143,
+    "code": "ta->y_resolution[0] = 300;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 143,
+    "end_line": 143,
+    "code": "ta->y_resolution[0] = 300;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 146,
+    "end_line": 146,
+    "code": "ta->x_default = data->y_default = data->x_resolution[0];\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 146,
+    "end_line": 146,
+    "code": "ta->x_default = data->y_default = data->x_resolution[0];\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 146,
+    "end_line": 146,
+    "code": "ta->y_default = data->x_resolution[0];\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 148,
+    "end_line": 148,
+    "code": "ta->finishings |= PAPPL_FINISHINGS_TRIM;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 148,
+    "end_line": 148,
+    "code": "ta->finishings |= PAPPL_FINISHINGS_TRIM;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 150,
+    "end_line": 165,
+    "code": " (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 150,
+    "end_line": 165,
+    "code": " (!strncmp(driver_name, \"cpcl_hma300e-\", 13))\n  {\n    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n  else\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 151,
+    "end_line": 157,
+    "code": "    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 151,
+    "end_line": 157,
+    "code": "    data->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n    memcpy(data->media, lprint_hma300e_media, sizeof(lprint_hma300e_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"roll_main_80x150mm\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"continuous\", sizeof(data->media_ready[0].type));\n  }\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 152,
+    "end_line": 152,
+    "code": "ta->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 152,
+    "end_line": 152,
+    "code": "ta->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 152,
+    "end_line": 152,
+    "code": "ta->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 152,
+    "end_line": 152,
+    "code": "ta->num_media = (int)(sizeof(lprint_hma300e_media) / sizeof(lprint_hma300e_media[0]));\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 158,
+    "end_line": 165,
+    "code": "se\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 158,
+    "end_line": 165,
+    "code": "se\n  {\n    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 159,
+    "end_line": 165,
+    "code": "    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 159,
+    "end_line": 165,
+    "code": "    data->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n    memcpy(data->media, lprint_cpcl_media, sizeof(lprint_cpcl_media));\n\n    papplCopyString(data->media_ready[0].size_name, \"na_index-4x6_4x6in\", sizeof(data->media_ready[0].size_name));\n    papplCopyString(data->media_ready[0].type, \"labels\", sizeof(data->media_ready[0].type));\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 160,
+    "end_line": 160,
+    "code": "ta->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 160,
+    "end_line": 160,
+    "code": "ta->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 160,
+    "end_line": 160,
+    "code": "ta->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 160,
+    "end_line": 160,
+    "code": "ta->num_media = (int)(sizeof(lprint_cpcl_media) / sizeof(lprint_cpcl_media[0]));\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 167,
+    "end_line": 167,
+    "code": "ta->bottom_top = data->left_right = 1;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 167,
+    "end_line": 167,
+    "code": "ta->bottom_top = data->left_right = 1;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 167,
+    "end_line": 167,
+    "code": "ta->left_right = 1;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 169,
+    "end_line": 169,
+    "code": "ta->num_source = 1;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 169,
+    "end_line": 169,
+    "code": "ta->num_source = 1;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 170,
+    "end_line": 170,
+    "code": "ta->source[0]  = \"main-roll\";\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 170,
+    "end_line": 170,
+    "code": "ta->source[0]  = \"main-roll\";\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 172,
+    "end_line": 172,
+    "code": "ta->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 172,
+    "end_line": 172,
+    "code": "ta->tracking_supported = PAPPL_MEDIA_TRACKING_MARK | PAPPL_MEDIA_TRACKING_WEB | PAPPL_MEDIA_TRACKING_CONTINUOUS;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 174,
+    "end_line": 174,
+    "code": "ta->num_type = 3;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 174,
+    "end_line": 174,
+    "code": "ta->num_type = 3;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 175,
+    "end_line": 175,
+    "code": "ta->type[0]  = \"continuous\";\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 175,
+    "end_line": 175,
+    "code": "ta->type[0]  = \"continuous\";\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 176,
+    "end_line": 176,
+    "code": "ta->type[1]  = \"labels\";\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 176,
+    "end_line": 176,
+    "code": "ta->type[1]  = \"labels\";\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 177,
+    "end_line": 177,
+    "code": "ta->type[2]  = \"labels-continuous\";\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 177,
+    "end_line": 177,
+    "code": "ta->type[2]  = \"labels-continuous\";\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 179,
+    "end_line": 179,
+    "code": "ta->tear_offset_configured   = 0;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 179,
+    "end_line": 179,
+    "code": "ta->tear_offset_configured   = 0;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 180,
+    "end_line": 180,
+    "code": "ta->tear_offset_supported[0] = -1500;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 180,
+    "end_line": 180,
+    "code": "ta->tear_offset_supported[0] = -1500;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 181,
+    "end_line": 181,
+    "code": "ta->tear_offset_supported[1] = 1500;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 181,
+    "end_line": 181,
+    "code": "ta->tear_offset_supported[1] = 1500;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 183,
+    "end_line": 183,
+    "code": "ta->speed_default      = 0;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 183,
+    "end_line": 183,
+    "code": "ta->speed_default      = 0;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 184,
+    "end_line": 184,
+    "code": "ta->speed_supported[0] = 2540;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 184,
+    "end_line": 184,
+    "code": "ta->speed_supported[0] = 2540;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 185,
+    "end_line": 185,
+    "code": "ta->speed_supported[1] = 4 * 2540;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 185,
+    "end_line": 185,
+    "code": "ta->speed_supported[1] = 4 * 2540;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 187,
+    "end_line": 187,
+    "code": "ta->darkness_configured = 50;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 187,
+    "end_line": 187,
+    "code": "ta->darkness_configured = 50;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 188,
+    "end_line": 188,
+    "code": "ta->darkness_supported  = 30;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 188,
+    "end_line": 188,
+    "code": "ta->darkness_supported  = 30;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function",
+    "start_line": 198,
+    "end_line": 234,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 198,
+    "end_line": 234,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_printfile(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 203,
+    "end_line": 234,
+    "code": "\n  int\t\tfd;\t\t\t// Input file\n  ssize_t\tbytes;\t\t\t// Bytes read/written\n  char\t\tbuffer[65536];\t\t// Read/write buffer\n\n\n  // Copy the raw file...\n  papplJobSetImpressions(job, 1);\n\n  if ((fd  = open(papplJobGetFilename(job), O_RDONLY)) < 0)\n  {\n    papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to open print file '%s': %s\", papplJobGetFilename(job), strerror(errno));\n    return (false);\n  }\n\n  // Copy print data...\n  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n  close(fd);\n\n  papplJobSetImpressionsCompleted(job, 1);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 220,
+    "end_line": 228,
+    "code": "ile ((bytes = read(fd, buffer, sizeof(buffer))) > 0)\n  {\n    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 221,
+    "end_line": 228,
+    "code": "    if (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n  }\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 222,
+    "end_line": 227,
+    "code": " (papplDeviceWrite(device, buffer, (size_t)bytes) < 0)\n    {\n      papplLogJob(job, PAPPL_LOGLEVEL_ERROR, \"Unable to send %d bytes to printer.\", (int)bytes);\n      close(fd);\n      return (false);\n    }\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function",
+    "start_line": 241,
+    "end_line": 257,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n  (void)options;\n  (void)device;\n\n  free(cpcl);\n  papplJobSetData(job, NULL);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 247,
+    "end_line": 247,
+    "code": "rint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function",
+    "start_line": 264,
+    "end_line": 314,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 264,
+    "end_line": 314,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 264,
+    "end_line": 314,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rendpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 270,
+    "end_line": 314,
+    "code": "  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 270,
+    "end_line": 314,
+    "code": "  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n  int\tdarkness;\t\t\t// Composite darkness value\n\n\n  (void)page;\n\n  // Write last line\n  lprint_cpcl_rwriteline(job, options, device, options->header.cupsHeight, NULL);\n\n  // Set options\n  papplDevicePrintf(device, \"PRESENT-AT %d 4\\r\\n\", options->media.top_offset * options->printer_resolution[1] / 2540);\n\n  if ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n  papplDevicePrintf(device, \"TONE %d\\r\\n\", 2 * darkness);\n\n  if (options->print_speed > 0)\n    papplDevicePrintf(device, \"SPEED %d\\r\\n\", 5 * options->print_speed / (4 * 2540));\n\n  if (options->finishings & PAPPL_FINISHINGS_TRIM)\n    papplDevicePuts(device, \"CUT\\r\\n\");\n\n  if (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n  if (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n  // Eject\n  papplDevicePuts(device, \"PRINT\\r\\n\");\n  papplDeviceFlush(device);\n\n  // Free memory and return...\n  lprintDitherFree(&cpcl->dither);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 271,
+    "end_line": 271,
+    "code": "rint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 284,
+    "end_line": 287,
+    "code": " ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 284,
+    "end_line": 287,
+    "code": " ((darkness = options->print_darkness + options->darkness_configured) < 0)\n    darkness = 0;\n  else if (darkness > 100)\n    darkness = 100;\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 297,
+    "end_line": 301,
+    "code": " (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 297,
+    "end_line": 301,
+    "code": " (options->media.type[0] && strcmp(options->media.type, \"labels\"))\n  {\n    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 298,
+    "end_line": 301,
+    "code": "    // Continuous media, so always set tracking to continuous...\n    options->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 300,
+    "end_line": 300,
+    "code": "tions->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 300,
+    "end_line": 300,
+    "code": "tions->media.tracking = PAPPL_MEDIA_TRACKING_CONTINUOUS;\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 303,
+    "end_line": 304,
+    "code": " (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 303,
+    "end_line": 304,
+    "code": " (options->media.tracking != PAPPL_MEDIA_TRACKING_CONTINUOUS)\n    papplDevicePuts(device, \"FORM\\r\\n\");\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function",
+    "start_line": 321,
+    "end_line": 338,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 321,
+    "end_line": 338,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartjob(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device)\t\t// I - Output device\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 326,
+    "end_line": 338,
+    "code": "  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n  (void)device;\n\n  // Save driver data...\n  papplJobSetData(job, cpcl);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 327,
+    "end_line": 327,
+    "code": "rint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)calloc(1, sizeof(lprint_cpcl_t));\n\t",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function",
+    "start_line": 345,
+    "end_line": 373,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 345,
+    "end_line": 373,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 345,
+    "end_line": 373,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rstartpage(\n    pappl_job_t        *job,\t\t// I - Job\n    pappl_pr_options_t *options,\t// I - Job options\n    pappl_device_t     *device,\t\t// I - Output device\n    unsigned           page)\t\t// I - Page number\n{\n  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 351,
+    "end_line": 373,
+    "code": "  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 351,
+    "end_line": 373,
+    "code": "  lprint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)page;\n\n  // Initialize the dither buffer...\n  if (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n  // Initialize the printer...\n  papplDevicePrintf(device, \"! 0 %u %u %u %u\\r\\n\", options->header.HWResolution[0], options->header.HWResolution[1], options->header.cupsHeight, options->header.NumCopies ? options->header.NumCopies : 1);\n  papplDevicePrintf(device, \"PAGE-WIDTH %u\\r\\n\", options->header.cupsWidth);\n  papplDevicePrintf(device, \"PAGE-HEIGHT %u\\r\\n\", options->header.cupsHeight);\n\n\n  // Start the page image...\n  papplDevicePuts(device, \"CLS\\n\");\n  papplDevicePrintf(device, \"BITMAP 0,0,%u,%u,1,\", cpcl->dither.out_width, options->header.cupsHeight);\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 352,
+    "end_line": 352,
+    "code": "rint_cpcl_t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 359,
+    "end_line": 360,
+    "code": " (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 359,
+    "end_line": 360,
+    "code": " (!lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n    return (false);\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 359,
+    "end_line": 359,
+    "code": "lprintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 359,
+    "end_line": 359,
+    "code": "printDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 359,
+    "end_line": 359,
+    "code": "rintDitherAlloc(&cpcl->dither, job, options, CUPS_CSPACE_W, options->header.HWResolution[0] == 300 ? 1.2 : 1.0))\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function",
+    "start_line": 380,
+    "end_line": 407,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 380,
+    "end_line": 407,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 380,
+    "end_line": 407,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_rwriteline(\n    pappl_job_t         *job,\t\t// I - Job\n    pappl_pr_options_t  *options,\t// I - Job options\n    pappl_device_t      *device,\t// I - Output device\n    unsigned            y,\t\t// I - Line number\n    const unsigned char *line)\t\t// I - Line\n{\n  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "struct_assignment",
+    "start_line": 387,
+    "end_line": 407,
+    "code": "  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function_assignment",
+    "start_line": 387,
+    "end_line": 407,
+    "code": "  lprint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t\t\t\t\t// CPCL driver data\n\n\n  (void)options;\n\n  // Dither and write the line...\n  if (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n  return (true);\n}\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "global_variable",
+    "start_line": 388,
+    "end_line": 388,
+    "code": "rint_cpcl_t\t\t*cpcl = (lprint_cpcl_t *)papplJobGetData(job);\n\t",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 395,
+    "end_line": 404,
+    "code": " (lprintDitherLine(&cpcl->dither, y, line))\n  {\n    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 396,
+    "end_line": 404,
+    "code": "    if (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n  }\n\n",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "anonymous_initializer_block",
+    "start_line": 397,
+    "end_line": 403,
+    "code": " (cpcl->dither.output[0] || memcmp(cpcl->dither.output, cpcl->dither.output + 1, cpcl->dither.out_width - 1))\n    {\n      papplDevicePrintf(device, \"CG %u 1 0 %d \", (unsigned)cpcl->dither.out_width, y);\n      papplDeviceWrite(device, cpcl->dither.output, cpcl->dither.out_width);\n      papplDevicePuts(device, \"\\r\\n\");\n      papplDeviceFlush(device);\n    }\n ",
+    "file": "data/codebase/lprint-cpcl.c"
+  },
+  {
+    "type": "function",
+    "start_line": 414,
+    "end_line": 421,
+    "code": "atic bool\t\t\t\t// O - `true` on success, `false` on failure\nlprint_cpcl_status(\n    pappl_printer_t *printer)\t\t// I - Printer\n{\n  (void)printer;\n\n  return (true);\n}\n#",
+    "file": "data/codebase/lprint-cpcl.c"
+  }
+]
