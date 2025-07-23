@@ -19,6 +19,11 @@
 
 ---
 
+## 🖼️ Screenshots
+
+<table> <tr> <td align="center"> <strong>📂 File Upload Interface</strong><br> <img src="./public/screenshots/Rag_image1.png" alt="RAG UI 1" width="500"> </td> <td align="center"> <strong>💬 Query Response Output</strong><br> <img src="./public/screenshots/Rag_image2.png" alt="RAG UI 2" width="500"> </td> </tr> </table>
+
+
 ## 🛠️ Folder Structure
 
 ```bash
